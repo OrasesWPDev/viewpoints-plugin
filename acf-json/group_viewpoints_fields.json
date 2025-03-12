@@ -1,0 +1,118 @@
+{
+  "key": "group_67d1e260e486c",
+  "title": "Viewpoint Field Groups",
+  "fields": [
+    {
+      "key": "field_67d1e26112a1e",
+      "label": "Viewpoint Bio",
+      "name": "viewpoint_bio",
+      "aria-label": "",
+      "type": "wysiwyg",
+      "instructions": "use P tags here (<p>)",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "relevanssi_exclude": 0,
+      "default_value": "",
+      "allow_in_bindings": 1,
+      "tabs": "all",
+      "toolbar": "full",
+      "media_upload": 1,
+      "delay": 0
+    },
+    {
+      "key": "field_67d1e2ac5607d",
+      "label": "Content",
+      "name": "content",
+      "aria-label": "",
+      "type": "repeater",
+      "instructions": "Put all Headings and paragraphs here - add a new row for each heading / paragraph combo",
+      "required": 1,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "relevanssi_exclude": 0,
+      "layout": "table",
+      "pagination": 0,
+      "min": 0,
+      "max": 0,
+      "collapsed": "",
+      "button_label": "Add Row",
+      "rows_per_page": 20,
+      "sub_fields": [
+        {
+          "key": "field_67d1e2e75607e",
+          "label": "Heading",
+          "name": "heading",
+          "aria-label": "",
+          "type": "text",
+          "instructions": "Put the Heading Here",
+          "required": 1,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "",
+            "class": "",
+            "id": ""
+          },
+          "relevanssi_exclude": 0,
+          "default_value": "",
+          "maxlength": "",
+          "allow_in_bindings": 0,
+          "placeholder": "",
+          "prepend": "",
+          "append": "",
+          "parent_repeater": "field_67d1e2ac5607d"
+        },
+        {
+          "key": "field_67d1e3005607f",
+          "label": "Content",
+          "name": "content",
+          "aria-label": "",
+          "type": "wysiwyg",
+          "instructions": "Use P tags (<p>)",
+          "required": 1,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "",
+            "class": "",
+            "id": ""
+          },
+          "relevanssi_exclude": 0,
+          "default_value": "",
+          "allow_in_bindings": 0,
+          "tabs": "all",
+          "toolbar": "full",
+          "media_upload": 1,
+          "delay": 0,
+          "parent_repeater": "field_67d1e2ac5607d"
+        }
+      ]
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "post_type",
+        "operator": "==",
+        "value": "viewpoints"
+      }
+    ]
+  ],
+  "menu_order": 0,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": "",
+  "active": true,
+  "description": "",
+  "show_in_rest": 0,
+  "modified": 1710454020
+}
