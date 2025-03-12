@@ -143,16 +143,62 @@ if (!viewpoints_plugin_check_dependencies()) {
 require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-utils.php';
 require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-plugin.php';
 require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-post-type.php';
-require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-field-groups.php';
 require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-shortcode.php';
-require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-acf.php'; // Add this line
+require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-acf-manager.php';
 
 // Initialize plugin
 function viewpoints_plugin_init() {
-    $plugin = Viewpoints_Plugin::get_instance();
-    $plugin->run();
+	$plugin = Viewpoints_Plugin::get_instance();
+	$plugin->run();
 
-    // Initialize the ACF integration
-    Viewpoints_ACF::get_instance();
+	// Initialize the ACF integration with consolidated manager
+	Viewpoints_ACF_Manager::get_instance();
+
+	// Add debug code to check ACF integration
+	add_action('admin_init', function() {
+		viewpoints_plugin_log('ACF Debug: Check if ACF integration is running');
+		// Check if the ACF Manager class instance exists
+		if (class_exists('Viewpoints_ACF_Manager')) {
+			viewpoints_plugin_log('ACF Debug: Viewpoints_ACF_Manager class exists');
+
+			// Check if we can access its properties
+			$instance = Viewpoints_ACF_Manager::get_instance();
+			viewpoints_plugin_log('ACF Debug: Got ACF Manager instance: ' . ($instance ? 'YES' : 'NO'));
+
+			// Check field group filename
+			$reflection = new ReflectionClass($instance);
+			$property = $reflection->getProperty('field_group_filename');
+			$property->setAccessible(true);
+			$filename = $property->getValue($instance);
+			viewpoints_plugin_log('ACF Debug: Field group filename is: ' . $filename);
+
+			// Check if the file exists
+			$file_path = VIEWPOINTS_PLUGIN_DIR . 'acf-json/' . $filename;
+			viewpoints_plugin_log('ACF Debug: Full path to field group file: ' . $file_path);
+			viewpoints_plugin_log('ACF Debug: File exists: ' . (file_exists($file_path) ? 'YES' : 'NO'));
+
+			if (file_exists($file_path)) {
+				// Check file size and content
+				$size = filesize($file_path);
+				viewpoints_plugin_log('ACF Debug: File size: ' . $size . ' bytes');
+
+				// Check first few characters
+				$content = file_get_contents($file_path);
+				viewpoints_plugin_log('ACF Debug: First 50 chars: ' . substr($content, 0, 50));
+			} else {
+				// List directory contents
+				viewpoints_plugin_log('ACF Debug: Checking acf-json directory contents');
+				$dir_path = VIEWPOINTS_PLUGIN_DIR . 'acf-json/';
+				if (is_dir($dir_path)) {
+					$files = scandir($dir_path);
+					viewpoints_plugin_log('ACF Debug: Directory contents: ' . print_r($files, true));
+				} else {
+					viewpoints_plugin_log('ACF Debug: acf-json directory does not exist');
+				}
+			}
+		} else {
+			viewpoints_plugin_log('ACF Debug: Viewpoints_ACF_Manager class does not exist');
+		}
+	});
 }
 add_action('plugins_loaded', 'viewpoints_plugin_init');
