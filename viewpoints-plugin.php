@@ -145,10 +145,14 @@ require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-plugin.php';
 require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-post-type.php';
 require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-field-groups.php';
 require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-shortcode.php';
+require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-acf.php'; // Add this line
 
 // Initialize plugin
 function viewpoints_plugin_init() {
     $plugin = Viewpoints_Plugin::get_instance();
     $plugin->run();
+
+    // Initialize the ACF integration
+    Viewpoints_ACF::get_instance();
 }
 add_action('plugins_loaded', 'viewpoints_plugin_init');
