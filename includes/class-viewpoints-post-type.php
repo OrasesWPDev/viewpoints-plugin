@@ -76,6 +76,9 @@ class Viewpoints_Post_Type {
         // Register the post type on init (priority 10)
         add_action('init', array($this, 'register_post_type'), 10);
 
+        // Register with ACF Pro (must be after ACF Pro loads)
+        add_action('acf/init', array($this, 'register_with_acf'), 15);
+
         // Add hooks for post type functioning
         add_filter('template_include', array($this, 'viewpoint_template'), 99);
 
@@ -362,5 +365,46 @@ class Viewpoints_Post_Type {
         }
 
         return $template;
+    }
+
+    /**
+     * Register this post type with ACF Pro.
+     *
+     * @since    1.0.0
+     */
+    public function register_with_acf() {
+        // Check if ACF Pro function exists
+        if (!function_exists('acf_register_post_type')) {
+            viewpoints_plugin_log('ACF Pro function acf_register_post_type not available', 'warning');
+            return;
+        }
+
+        viewpoints_plugin_log('Registering viewpoints post type with ACF Pro');
+
+        // Get the post type settings
+        $settings = get_option($this->option_name, array());
+        if (empty($settings)) {
+            $settings = $this->get_default_post_type_settings();
+        }
+
+        // Register with ACF
+        acf_register_post_type($this->post_type, $settings);
+
+        // Add a modified timestamp to force sync notification
+        if (!isset($settings['modified'])) {
+            $settings['modified'] = time();
+            update_option($this->option_name, $settings);
+        }
+
+        // Trigger sync notification by storing a different version in ACF's internal storage
+        if (function_exists('acf_get_internal_post_type') && function_exists('acf_update_internal_post_type')) {
+            $internal = acf_get_internal_post_type($this->post_type);
+            if (!$internal || $internal['modified'] != $settings['modified']) {
+                viewpoints_plugin_log('Setting up sync notification for ACF Pro');
+                acf_update_internal_post_type($this->post_type, $settings);
+            }
+        }
+
+        viewpoints_plugin_log('Post type registered with ACF Pro');
     }
 }
