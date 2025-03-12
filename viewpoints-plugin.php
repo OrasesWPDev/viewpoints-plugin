@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Viewpoints Plugin
- * Plugin URI: https://example.com/viewpoints-plugin
+ * Plugin URI: https://github.com/OrasesWPDev/viewpoints-plugin/blob/main/viewpoints-plugin.php
  * Description: Registers a custom post type for Viewpoints with ACF Pro field groups.
  * Version: 1.0.0
- * Author: Your Name
- * Author URI: https://example.com
+ * Author: Orases
+ * Author URI: https://orases.com
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * License: GPL v2 or later
@@ -140,6 +140,7 @@ if (!viewpoints_plugin_check_dependencies()) {
 }
 
 // Include necessary files
+require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-utils.php';
 require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-plugin.php';
 require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-post-type.php';
 require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-field-groups.php';
