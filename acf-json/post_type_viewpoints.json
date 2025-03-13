@@ -56,7 +56,7 @@
     "category",
     "post_tag"
   ],
-  "has_archive": true,
+  "has_archive": false,
   "query_var": true,
   "can_export": true,
   "delete_with_user": false,
