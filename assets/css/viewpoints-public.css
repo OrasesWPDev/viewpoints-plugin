@@ -232,35 +232,35 @@
 /* ----------------------------------------
    6. NAVIGATION SECTION
    ---------------------------------------- */
-.vp-viewpoint-navigation {
+.es-employer-story-navigation {
     margin: var(--vp-spacing-large) 0;
     padding: var(--vp-spacing-medium) 0;
     border-top: 1px solid var(--vp-border-color);
     border-bottom: 1px solid var(--vp-border-color);
 }
 
-.vp-nav-links {
+.es-nav-links {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
 }
 
-.vp-nav-button {
+.es-nav-button {
     flex: 0 0 30%;
     max-width: 30%;
     text-align: center;
 }
 
-.vp-nav-previous {
+.es-nav-previous {
     text-align: left;
 }
 
-.vp-nav-next {
+.es-nav-next {
     text-align: right;
 }
 
-.vp-nav-button a {
+.es-nav-button a {
     display: inline-block;
     width: 100%; /* Make all buttons same width */
     padding: 10px 15px;
@@ -279,11 +279,17 @@
     line-height: 1.2;
 }
 
-.vp-nav-button a:hover {
+.es-nav-button a:hover {
     background-color: rgba(255, 255, 255, 0.64);
     border: 1px solid var(--vp-secondary-color);
     color: var(--vp-secondary-color);
     transform: translateY(-2px);
+}
+
+.empty-nav-button {
+    display: inline-block;
+    width: 100%;
+    min-height: 60px;
 }
 
 /* ----------------------------------------

@@ -78,19 +78,23 @@ get_header();
 			<?php endif; ?>
 
             <!-- Post Navigation -->
-            <nav class="vp-viewpoint-navigation container">
-                <div class="vp-nav-links">
-                    <div class="vp-nav-button vp-nav-previous">
+            <nav class="es-employer-story-navigation container">
+                <div class="es-nav-links">
+                    <div class="es-nav-button es-nav-previous">
 						<?php if (get_previous_post()) : ?>
 							<?php previous_post_link('%link', 'See Previous'); ?>
+						<?php else: ?>
+                            <span class="empty-nav-button"></span>
 						<?php endif; ?>
                     </div>
-                    <div class="vp-nav-button vp-nav-all">
+                    <div class="es-nav-button es-nav-all">
                         <a href="<?php echo esc_url(home_url('/viewpoints/')); ?>">See All</a>
                     </div>
-                    <div class="vp-nav-button vp-nav-next">
+                    <div class="es-nav-button es-nav-next">
 						<?php if (get_next_post()) : ?>
 							<?php next_post_link('%link', 'See Next'); ?>
+						<?php else: ?>
+                            <span class="empty-nav-button"></span>
 						<?php endif; ?>
                     </div>
                 </div>
