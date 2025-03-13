@@ -208,24 +208,49 @@
 }
 
 /* Testimonial blockquote styling */
-.vp-content-body .testimonial-name blockquote {
+.vp-content-body .testimonial-name blockquote,
+.vp-content-body .row .col-md-12 .clearfix.testimonial-name blockquote {
     width: 100%;
     max-width: 100%;
     margin-left: 0;
     margin-right: 0;
+    box-sizing: border-box;
+}
+
+/* Fix for nested rows and columns in content */
+.vp-content-body .row {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.vp-content-body .col-md-12 {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.vp-content-body .clearfix {
+    width: 100%;
 }
 
 .vp-content-body .testimonial-name blockquote h4 {
     margin-top: 0;
     margin-bottom: 5px;
     font-weight: bold;
-    color: var(--vp-primary-color);
+    color: #68348d;
 }
 
-.vp-content-body .testimonial-name blockquote .role-testimonial {
+.vp-content-body .testimonial-name blockquote .role-testimonial,
+.vp-content-body .testimonial-name blockquote p:not(:first-child) {
     margin-top: 0;
     font-style: italic;
-    color: #666;
+    color: #68348d;
+    font-weight: bold;
+}
+
+.vp-content-body .testimonial-name blockquote p:first-of-type {
+    color: #7c7c7c;
+    font-weight: normal;
 }
 
 .vp-content-body blockquote cite,
