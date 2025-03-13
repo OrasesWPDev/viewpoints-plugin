@@ -15,7 +15,7 @@ get_header();
 ?>
     <main id="main" class="<?php echo esc_attr(flatsome_main_classes()); ?>">
         <!-- Header Block (full width) -->
-        <div class="vp-section-wrapper vp-viewpoint-header">
+        <div class="vp-section-wrapper vp-viewpoint-header" style="margin-bottom: 40px;">
 			<?php echo do_shortcode('[block id="single-viewpoint-header"]'); ?>
 			<?php if (!strpos(ob_get_contents(), 'vp-breadcrumbs')) : ?>
                 <div class="container">

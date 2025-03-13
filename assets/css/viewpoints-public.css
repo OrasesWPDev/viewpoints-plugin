@@ -66,6 +66,11 @@
     text-decoration: none;
 }
 
+/* Force white color for breadcrumbs in header */
+.vp-viewpoint-header .vp-breadcrumbs * {
+    color: #fff !important;
+}
+
 .vp-viewpoint-header a:hover,
 .vp-breadcrumbs a:hover {
     text-decoration: underline;
@@ -83,7 +88,7 @@
 .vp-bio-section {
     margin-bottom: var(--vp-spacing-large);
     padding: var(--vp-spacing-medium) 0;
-    margin-top: var(--vp-spacing-large); /* Add top margin for spacing from header */
+    margin-top: 60px !important; /* Increased top margin with !important */
 }
 
 .vp-bio-column {
