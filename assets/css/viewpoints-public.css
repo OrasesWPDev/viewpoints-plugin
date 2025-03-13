@@ -365,6 +365,7 @@
     position: relative;
     overflow: hidden;
     text-align: center;
+    padding-top: 15px; /* Add padding to the top of the image */
 }
 
 .vp-thumbnail {
@@ -392,9 +393,10 @@
 .vp-grid-excerpt {
     font-size: 1rem;
     line-height: 1.6;
-    color: #555;
+    color: #68348d; /* Changed text color to purple */
     max-width: 350px;
     margin: 0 auto;
+    font-style: italic; /* Make text italic */
 }
 
 .vp-grid-excerpt p {
