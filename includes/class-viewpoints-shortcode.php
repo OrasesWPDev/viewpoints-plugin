@@ -79,7 +79,7 @@ class Viewpoints_Shortcode {
 
 		// Set up query arguments
 		$args = array(
-			'post_type' => 'viewpoint',
+			'post_type' => 'viewpoints',
 			'posts_per_page' => $count,
 			'orderby' => $orderby,
 			'order' => $order,

@@ -175,7 +175,7 @@ class Viewpoints_Plugin {
     public function enqueue_admin_styles() {
         // Only load on plugin admin pages
         $screen = get_current_screen();
-        if ( ! isset( $screen->post_type ) || 'viewpoint' !== $screen->post_type ) {
+        if ( ! isset( $screen->post_type ) || 'viewpoints' !== $screen->post_type ) {
             return;
         }
 
@@ -203,7 +203,7 @@ class Viewpoints_Plugin {
     public function enqueue_admin_scripts() {
         // Only load on plugin admin pages
         $screen = get_current_screen();
-        if ( ! isset( $screen->post_type ) || 'viewpoint' !== $screen->post_type ) {
+        if ( ! isset( $screen->post_type ) || 'viewpoints' !== $screen->post_type ) {
             return;
         }
 
@@ -230,7 +230,7 @@ class Viewpoints_Plugin {
      */
     public function enqueue_public_styles() {
         // Only enqueue on single viewpoint or when shortcode is used
-        if ( is_singular( 'viewpoint' ) || $this->shortcode->is_shortcode_used() ) {
+        if ( is_singular( 'viewpoints' ) || $this->shortcode->is_shortcode_used() ) {
             viewpoints_plugin_log('Enqueuing public styles for viewpoint content');
 
             $css_file = VIEWPOINTS_PLUGIN_ASSETS_DIR . 'css/viewpoints-public.css';
@@ -255,7 +255,7 @@ class Viewpoints_Plugin {
      */
     public function enqueue_public_scripts() {
         // Only enqueue on single viewpoint or when shortcode is used
-        if ( is_singular( 'viewpoint' ) || $this->shortcode->is_shortcode_used() ) {
+        if ( is_singular( 'viewpoints' ) || $this->shortcode->is_shortcode_used() ) {
             viewpoints_plugin_log('Enqueuing public scripts for viewpoint content');
 
             $js_file = VIEWPOINTS_PLUGIN_ASSETS_DIR . 'js/viewpoints-public.js';
