@@ -83,6 +83,7 @@
 .vp-bio-section {
     margin-bottom: var(--vp-spacing-large);
     padding: var(--vp-spacing-medium) 0;
+    margin-top: var(--vp-spacing-large); /* Add top margin for spacing from header */
 }
 
 .vp-bio-column {
@@ -121,6 +122,10 @@
    ---------------------------------------- */
 .vp-content-section {
     margin-bottom: var(--vp-spacing-large);
+    max-width: 1140px; /* Standard content width */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 15px; /* Add some padding on smaller screens */
 }
 
 .vp-content-row {

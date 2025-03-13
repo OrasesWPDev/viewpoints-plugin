@@ -55,7 +55,7 @@ get_header();
 
             <!-- Repeater Content Section -->
 			<?php if (function_exists('get_field') && have_rows('content')) : ?>
-                <div class="vp-content-section">
+                <div class="vp-content-section container">
 					<?php while (have_rows('content')) : the_row(); ?>
                         <div class="vp-content-row">
 							<?php if ($heading = get_sub_field('heading')) : ?>
@@ -78,7 +78,7 @@ get_header();
 			<?php endif; ?>
 
             <!-- Post Navigation -->
-            <nav class="vp-viewpoint-navigation">
+            <nav class="vp-viewpoint-navigation container">
                 <div class="vp-nav-links">
                     <div class="vp-nav-button vp-nav-previous">
 						<?php if (get_previous_post()) : ?>
