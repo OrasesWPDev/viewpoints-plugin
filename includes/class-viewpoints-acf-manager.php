@@ -46,7 +46,7 @@ class Viewpoints_ACF_Manager {
 	 * @access protected
 	 * @var string $post_type_key The key for the main post type.
 	 */
-	protected $post_type_key = 'viewpoints';
+	protected $post_type_key = 'post_type_viewpoints';
 
 	/**
 	 * Field group JSON filename.
