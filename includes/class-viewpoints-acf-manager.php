@@ -97,13 +97,33 @@ class Viewpoints_ACF_Manager {
 	public function delayed_sync() {
 		viewpoints_plugin_log('Viewpoints ACF Manager: Running delayed sync');
 		
-		if (!function_exists('acf_get_field_group')) {
+		if (!function_exists('acf_get_field_group') || !function_exists('acf_get_field_groups')) {
 			viewpoints_plugin_log('Viewpoints ACF Manager: ACF still not available, sync aborted');
+			// Try again later with a lower priority
+			add_action('admin_init', array($this, 'final_sync_attempt'), 999);
 			return;
 		}
 		
 		// Clean up duplicates and import field groups/post types
 		$this->cleanup_duplicates();
+		$this->import_post_types();
+		$this->import_field_groups();
+	}
+	
+	/**
+	 * Final attempt to sync ACF fields.
+	 * 
+	 * @since 1.0.0
+	 */
+	public function final_sync_attempt() {
+		viewpoints_plugin_log('Viewpoints ACF Manager: Final sync attempt');
+		
+		if (!function_exists('acf_get_field_group') || !function_exists('acf_get_field_groups')) {
+			viewpoints_plugin_log('Viewpoints ACF Manager: ACF still not available, giving up');
+			return;
+		}
+		
+		// Import field groups and post types without cleanup
 		$this->import_post_types();
 		$this->import_field_groups();
 	}
@@ -116,8 +136,62 @@ class Viewpoints_ACF_Manager {
 	private function cleanup_duplicates() {
 		viewpoints_plugin_log('Viewpoints ACF Manager: Cleaning up duplicates');
 		
-		// Clean up duplicates
-		$this->cleanup_duplicates();
+		// Check for existing field groups with our key pattern to avoid duplicates
+		if (function_exists('acf_get_field_groups')) {
+			$field_groups = acf_get_field_groups();
+			$viewpoint_groups = [];
+			
+			foreach ($field_groups as $group) {
+				if (isset($group['key']) && $group['key'] === $this->field_group_key) {
+					$viewpoint_groups[] = $group;
+				}
+			}
+			
+			// If we have multiple field groups with the same key, clean them up
+			if (count($viewpoint_groups) > 1) {
+				viewpoints_plugin_log('Viewpoints ACF Manager: Found ' . count($viewpoint_groups) . ' duplicate field groups, cleaning up');
+				
+				// Keep the first one, delete the rest
+				for ($i = 1; $i < count($viewpoint_groups); $i++) {
+					viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate field group ID: ' . $viewpoint_groups[$i]['ID']);
+					acf_delete_field_group($viewpoint_groups[$i]['ID']);
+				}
+			}
+		}
+		
+		// Check for existing post types with our key pattern to avoid duplicates
+		if (function_exists('acf_get_post_types')) {
+			$post_types = acf_get_post_types();
+			$viewpoint_post_types = [];
+			
+			foreach ($post_types as $post_type) {
+				if (isset($post_type['key']) && $post_type['key'] === $this->post_type_key) {
+					$viewpoint_post_types[] = $post_type;
+				}
+			}
+			
+			// If we have multiple post types with the same key, clean them up
+			if (count($viewpoint_post_types) > 1) {
+				viewpoints_plugin_log('Viewpoints ACF Manager: Found ' . count($viewpoint_post_types) . ' duplicate post types, cleaning up');
+				
+				// Keep the first one, delete the rest
+				for ($i = 1; $i < count($viewpoint_post_types); $i++) {
+					$post_type_id = null;
+					if (is_array($viewpoint_post_types[$i]) && isset($viewpoint_post_types[$i]['ID'])) {
+						$post_type_id = $viewpoint_post_types[$i]['ID'];
+					} elseif (is_object($viewpoint_post_types[$i]) && isset($viewpoint_post_types[$i]->ID)) {
+						$post_type_id = $viewpoint_post_types[$i]->ID;
+					}
+					
+					if ($post_type_id) {
+						viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate post type ID: ' . $post_type_id);
+						if (function_exists('acf_delete_post_type')) {
+							acf_delete_post_type($post_type_id);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -137,8 +211,11 @@ class Viewpoints_ACF_Manager {
 		// IMPORTANT: Register local JSON load point immediately as in original Viewpoints_ACF
 		add_filter('acf/settings/load_json', array($this, 'acf_json_load_point'));
 
-		// IMPORTANT: Hook into ACF initialization with the same priority as original
-		add_action('acf/init', array($this, 'initialize_acf_sync'), 5);
+		// Make sure ACF is loaded before we try to use it
+		add_action('plugins_loaded', function() {
+			// IMPORTANT: Hook into ACF initialization with the same priority as original
+			add_action('acf/init', array($this, 'initialize_acf_sync'), 20);
+		});
 
 		// Add admin notices for syncing - same as original
 		add_action('admin_notices', array($this, 'sync_admin_notice'));
@@ -275,16 +352,16 @@ class Viewpoints_ACF_Manager {
 		viewpoints_plugin_log('Viewpoints ACF Manager: initialize_acf_sync called');
 		viewpoints_plugin_log('Viewpoints ACF Manager: Field group filename looking for: ' . $this->field_group_filename);
 
-		// Check if we're in the admin and have ACF functions
+		// Check if we're in the admin
 		if (!is_admin()) {
 			viewpoints_plugin_log('Viewpoints ACF Manager: Skipping sync - not in admin');
 			return;
 		}
 		
 		// Wait for ACF to be fully loaded
-		if (!function_exists('acf_get_field_group')) {
+		if (!function_exists('acf_get_field_group') || !function_exists('acf_get_field_groups')) {
 			viewpoints_plugin_log('Viewpoints ACF Manager: ACF functions not available yet, will try again later');
-			add_action('admin_init', array($this, 'delayed_sync'), 20);
+			add_action('admin_init', array($this, 'delayed_sync'), 99);
 			return;
 		}
 		

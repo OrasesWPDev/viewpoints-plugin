@@ -71,6 +71,9 @@
     "thumbnail",
     "page-attributes"
   ],
+  "hide_on_screen": [
+    "excerpt"
+  ],
   "show_in_rest": true,
   "rest_base": "",
   "rest_controller_class": ""
