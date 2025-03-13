@@ -167,24 +167,24 @@ class Viewpoints_Shortcode {
 		$viewpoints_archive_url = get_post_type_archive_link('viewpoints');
 		$viewpoints_label = 'Viewpoints';
 
-		// Start breadcrumbs container with inline style for white text
-		echo '<div class="vp-breadcrumbs" style="color: #fff !important;">';
+		// Start breadcrumbs container
+		echo '<div class="vp-breadcrumbs">';
 
-		// Home link with forced white color
-		echo '<a href="' . esc_url($home_url) . '" style="color: #fff !important;">Home</a>';
-		echo '<span class="vp-breadcrumb-divider" style="color: #fff !important;">&gt;</span>';
+		// Home link
+		echo '<a href="' . esc_url($home_url) . '">Home</a>';
+		echo '<span class="vp-breadcrumb-divider">&gt;</span>';
 
 		if (is_singular('viewpoints')) {
-			// Viewpoints archive link with forced white color
-			echo '<a href="' . esc_url($viewpoints_archive_url) . '" style="color: #fff !important;">' . esc_html($viewpoints_label) . '</a>';
-			echo '<span class="vp-breadcrumb-divider" style="color: #fff !important;">&gt;</span>';
+			// Viewpoints archive link
+			echo '<a href="' . esc_url($viewpoints_archive_url) . '">' . esc_html($viewpoints_label) . '</a>';
+			echo '<span class="vp-breadcrumb-divider">&gt;</span>';
 
-			// Current post with forced white color
-			echo '<span class="breadcrumb_last" style="color: #fff !important;">' . esc_html(get_the_title()) . '</span>';
+			// Current post
+			echo '<span class="breadcrumb_last">' . esc_html(get_the_title()) . '</span>';
 		}
 		elseif (is_post_type_archive('viewpoints')) {
-			// On archive page, just show Viewpoints as current with forced white color
-			echo '<span class="breadcrumb_last" style="color: #fff !important;">' . esc_html($viewpoints_label) . '</span>';
+			// On archive page, just show Viewpoints as current
+			echo '<span class="breadcrumb_last">' . esc_html($viewpoints_label) . '</span>';
 		}
 
 		echo '</div>';

@@ -43,7 +43,7 @@
    3. HEADER SECTION
    ---------------------------------------- */
 .vp-section-wrapper.vp-viewpoint-header {
-    margin-bottom: var(--vp-spacing-large);
+    margin-bottom: 40px;
 }
 
 .vp-breadcrumbs {
@@ -67,7 +67,11 @@
 }
 
 /* Force white color for breadcrumbs in header */
-.vp-viewpoint-header .vp-breadcrumbs * {
+.vp-viewpoint-header .vp-breadcrumbs,
+.vp-viewpoint-header .vp-breadcrumbs a,
+.vp-viewpoint-header .vp-breadcrumbs span,
+.vp-viewpoint-header .vp-breadcrumbs .breadcrumb_last,
+.vp-viewpoint-header .vp-breadcrumbs .vp-breadcrumb-divider {
     color: #fff !important;
 }
 
