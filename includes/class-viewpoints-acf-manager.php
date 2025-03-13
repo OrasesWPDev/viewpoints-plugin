@@ -236,7 +236,7 @@ class Viewpoints_ACF_Manager {
 	/**
 	 * Initialize ACF sync during acf/init hook.
 	 * This is the main entry point for synchronization.
-	 * Identical to the original implementation in Viewpoints_ACF.
+	 * Improved implementation to prevent duplicate field groups.
 	 *
 	 * @since 1.0.0
 	 */
@@ -248,6 +248,29 @@ class Viewpoints_ACF_Manager {
 		if (!is_admin() || !function_exists('acf_get_field_group')) {
 			viewpoints_plugin_log('Viewpoints ACF Manager: Skipping sync - not in admin or ACF functions not available');
 			return;
+		}
+		
+		// Check for existing field groups with our key pattern to avoid duplicates
+		if (function_exists('acf_get_field_groups')) {
+			$field_groups = acf_get_field_groups();
+			$viewpoint_groups = [];
+			
+			foreach ($field_groups as $group) {
+				if (isset($group['key']) && $group['key'] === $this->field_group_key) {
+					$viewpoint_groups[] = $group;
+				}
+			}
+			
+			// If we have multiple field groups with the same key, clean them up
+			if (count($viewpoint_groups) > 1) {
+				viewpoints_plugin_log('Viewpoints ACF Manager: Found ' . count($viewpoint_groups) . ' duplicate field groups, cleaning up');
+				
+				// Keep the first one, delete the rest
+				for ($i = 1; $i < count($viewpoint_groups); $i++) {
+					viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate field group ID: ' . $viewpoint_groups[$i]['ID']);
+					acf_delete_field_group($viewpoint_groups[$i]['ID']);
+				}
+			}
 		}
 
 		// Import post type definitions
@@ -477,7 +500,7 @@ class Viewpoints_ACF_Manager {
 
 	/**
 	 * Import a single field group.
-	 * Identical to the original implementation in Viewpoints_ACF.
+	 * Improved implementation to prevent duplicate field groups.
 	 *
 	 * @since 1.0.0
 	 * @param array $field_group Field group definition
@@ -491,23 +514,27 @@ class Viewpoints_ACF_Manager {
 		$existing = acf_get_field_group($field_group['key']);
 		viewpoints_plugin_log('Viewpoints ACF Manager: Existing field group check: ' . ($existing ? 'EXISTS' : 'DOES NOT EXIST'));
 
-		if (!$existing || $force_import) {
-			try {
-				// If it exists and we're forcing import, remove it first to avoid conflicts
-				if ($existing && $force_import) {
-					viewpoints_plugin_log('Viewpoints ACF Manager: Force importing field group, removing existing one first');
-					acf_delete_field_group($existing['ID']);
-				}
-				
-				// Import the field group
-				viewpoints_plugin_log('Viewpoints ACF Manager: Attempting to import field group via acf_import_field_group()');
+		try {
+			if (!$existing) {
+				// If it doesn't exist, create it
+				viewpoints_plugin_log('Viewpoints ACF Manager: Creating new field group');
 				acf_import_field_group($field_group);
-				viewpoints_plugin_log('Viewpoints ACF Manager: Successfully imported field group: ' . $field_group['title']);
-			} catch (Exception $e) {
-				viewpoints_plugin_log('Viewpoints ACF Manager: Error importing field group: ' . $e->getMessage());
+				viewpoints_plugin_log('Viewpoints ACF Manager: Successfully created field group: ' . $field_group['title']);
+			} else if ($force_import) {
+				// If it exists and we're forcing import, update it instead of deleting and recreating
+				viewpoints_plugin_log('Viewpoints ACF Manager: Updating existing field group');
+				
+				// Preserve the ID and other important properties
+				$field_group['ID'] = $existing['ID'];
+				
+				// Update the field group
+				acf_update_field_group($field_group);
+				viewpoints_plugin_log('Viewpoints ACF Manager: Successfully updated field group: ' . $field_group['title']);
+			} else {
+				viewpoints_plugin_log('Viewpoints ACF Manager: Field group already exists and force_import is false, skipping');
 			}
-		} else {
-			viewpoints_plugin_log('Viewpoints ACF Manager: Field group already exists: ' . $field_group['key']);
+		} catch (Exception $e) {
+			viewpoints_plugin_log('Viewpoints ACF Manager: Error importing field group: ' . $e->getMessage());
 		}
 	}
 
@@ -625,7 +652,7 @@ class Viewpoints_ACF_Manager {
 
 	/**
 	 * Handle the synchronization action.
-	 * Identical to the original implementation in Viewpoints_ACF.
+	 * Improved implementation to prevent duplicate field groups.
 	 *
 	 * @since 1.0.0
 	 * @param bool $skip_security_check Whether to skip security checks (for internal calls)
@@ -649,6 +676,29 @@ class Viewpoints_ACF_Manager {
 			viewpoints_plugin_log('Viewpoints ACF Manager: Security checks passed, proceeding with sync');
 		} else {
 			viewpoints_plugin_log('Viewpoints ACF Manager: Security checks skipped (internal call), proceeding with sync');
+		}
+
+		// Check for existing field groups with our key pattern to avoid duplicates
+		if (function_exists('acf_get_field_groups')) {
+			$field_groups = acf_get_field_groups();
+			$viewpoint_groups = [];
+			
+			foreach ($field_groups as $group) {
+				if (isset($group['key']) && $group['key'] === $this->field_group_key) {
+					$viewpoint_groups[] = $group;
+				}
+			}
+			
+			// If we have multiple field groups with the same key, clean them up
+			if (count($viewpoint_groups) > 1) {
+				viewpoints_plugin_log('Viewpoints ACF Manager: Found ' . count($viewpoint_groups) . ' duplicate field groups, cleaning up');
+				
+				// Keep the first one, delete the rest
+				for ($i = 1; $i < count($viewpoint_groups); $i++) {
+					viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate field group ID: ' . $viewpoint_groups[$i]['ID']);
+					acf_delete_field_group($viewpoint_groups[$i]['ID']);
+				}
+			}
 		}
 
 		// Import post types
