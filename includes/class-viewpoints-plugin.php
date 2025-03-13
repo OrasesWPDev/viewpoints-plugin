@@ -101,19 +101,20 @@ class Viewpoints_Plugin {
      * @since    1.0.0
      * @access   private
      */
-    private function setup_dependencies() {
-        viewpoints_plugin_log('Setting up dependencies');
+	private function setup_dependencies() {
+		viewpoints_plugin_log('Setting up dependencies');
 
-        // Initialize components
-        $this->post_type = new Viewpoints_Post_Type();
-        viewpoints_plugin_log('Post Type component initialized');
+		// Initialize components
+		$this->post_type = new Viewpoints_Post_Type();
+		viewpoints_plugin_log('Post Type component initialized');
 
-        $this->field_groups = new Viewpoints_Field_Groups();
-        viewpoints_plugin_log('Field Groups component initialized');
+		// Use the ACF Manager instead of Field Groups
+		$this->field_groups = Viewpoints_ACF_Manager::get_instance();
+		viewpoints_plugin_log('ACF Manager component initialized');
 
-        $this->shortcode = new Viewpoints_Shortcode();
-        viewpoints_plugin_log('Shortcode component initialized');
-    }
+		$this->shortcode = new Viewpoints_Shortcode();
+		viewpoints_plugin_log('Shortcode component initialized');
+	}
 
     /**
      * Register all of the hooks related to the admin area functionality
@@ -145,26 +146,26 @@ class Viewpoints_Plugin {
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_public_scripts' ) );
     }
 
-    /**
-     * Run the plugin functionalities.
-     *
-     * @since    1.0.0
-     */
-    public function run() {
-        viewpoints_plugin_log('Plugin initialization started');
+	/**
+	 * Run the plugin functionalities.
+	 *
+	 * @since    1.0.0
+	 */
+	public function run() {
+		viewpoints_plugin_log('Plugin initialization started');
 
-        // Initialize various components
-        viewpoints_plugin_log('Registering post type');
-        $this->post_type->register();
+		// Initialize various components
+		viewpoints_plugin_log('Registering post type');
+		$this->post_type->register();
 
-        viewpoints_plugin_log('Registering field groups');
-        $this->field_groups->register();
+		viewpoints_plugin_log('Registering field groups');
+		$this->field_groups->register();
 
-        viewpoints_plugin_log('Registering shortcode');
-        $this->shortcode->register();
+		viewpoints_plugin_log('Registering shortcode');
+		$this->shortcode->register();
 
-        viewpoints_plugin_log('Plugin initialization completed');
-    }
+		viewpoints_plugin_log('Plugin initialization completed');
+	}
 
     /**
      * Register the admin stylesheets for the admin area.
@@ -174,7 +175,7 @@ class Viewpoints_Plugin {
     public function enqueue_admin_styles() {
         // Only load on plugin admin pages
         $screen = get_current_screen();
-        if ( ! isset( $screen->post_type ) || 'viewpoint' !== $screen->post_type ) {
+        if ( ! isset( $screen->post_type ) || 'viewpoints' !== $screen->post_type ) {
             return;
         }
 
@@ -202,7 +203,7 @@ class Viewpoints_Plugin {
     public function enqueue_admin_scripts() {
         // Only load on plugin admin pages
         $screen = get_current_screen();
-        if ( ! isset( $screen->post_type ) || 'viewpoint' !== $screen->post_type ) {
+        if ( ! isset( $screen->post_type ) || 'viewpoints' !== $screen->post_type ) {
             return;
         }
 
@@ -229,7 +230,7 @@ class Viewpoints_Plugin {
      */
     public function enqueue_public_styles() {
         // Only enqueue on single viewpoint or when shortcode is used
-        if ( is_singular( 'viewpoint' ) || $this->shortcode->is_shortcode_used() ) {
+        if ( is_singular( 'viewpoints' ) || $this->shortcode->is_shortcode_used() ) {
             viewpoints_plugin_log('Enqueuing public styles for viewpoint content');
 
             $css_file = VIEWPOINTS_PLUGIN_ASSETS_DIR . 'css/viewpoints-public.css';
@@ -254,7 +255,7 @@ class Viewpoints_Plugin {
      */
     public function enqueue_public_scripts() {
         // Only enqueue on single viewpoint or when shortcode is used
-        if ( is_singular( 'viewpoint' ) || $this->shortcode->is_shortcode_used() ) {
+        if ( is_singular( 'viewpoints' ) || $this->shortcode->is_shortcode_used() ) {
             viewpoints_plugin_log('Enqueuing public scripts for viewpoint content');
 
             $js_file = VIEWPOINTS_PLUGIN_ASSETS_DIR . 'js/viewpoints-public.js';

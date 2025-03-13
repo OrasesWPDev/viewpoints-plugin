@@ -213,7 +213,7 @@ class Viewpoints_Post_Type {
             }
 
             // Fall back to plugin template
-            $plugin_template = VIEWPOINTS_PLUGIN_TEMPLATES_DIR . 'single-' . $this->post_type . '.php';
+            $plugin_template = VIEWPOINTS_PLUGIN_TEMPLATES_DIR . 'single-viewpoint.php';
 
             if (file_exists($plugin_template)) {
                 viewpoints_plugin_log('Using plugin template: ' . $plugin_template);
