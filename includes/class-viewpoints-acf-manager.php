@@ -84,7 +84,7 @@ class Viewpoints_ACF_Manager {
 	public static function get_instance() {
 		if (null == self::$instance) {
 			self::$instance = new self;
-			viewpoints_plugin_log('Viewpoints ACF Manager: Instance created');
+			// viewpoints_plugin_log('Viewpoints ACF Manager: Instance created');
 		}
 		return self::$instance;
 	}
@@ -202,7 +202,7 @@ class Viewpoints_ACF_Manager {
 	 * @since 1.0.0
 	 */
 	private function __construct() {
-		viewpoints_plugin_log('Initializing Viewpoints_ACF_Manager class');
+		// viewpoints_plugin_log('Initializing Viewpoints_ACF_Manager class');
 		$this->json_dir = VIEWPOINTS_PLUGIN_DIR . 'acf-json/';
 
 		// IMPORTANT: Register local JSON save point immediately as in original Viewpoints_ACF
@@ -223,7 +223,7 @@ class Viewpoints_ACF_Manager {
 		// Add an action to handle syncing - same as original
 		add_action('admin_post_viewpoints_sync_acf', array($this, 'handle_sync_action'));
 
-		viewpoints_plugin_log('Viewpoints ACF Manager initialization completed');
+		// viewpoints_plugin_log('Viewpoints ACF Manager initialization completed');
 	}
 
 	/**
@@ -233,7 +233,7 @@ class Viewpoints_ACF_Manager {
 	 * @since 1.0.0
 	 */
 	public function register() {
-		viewpoints_plugin_log('Registering Viewpoints ACF Manager hooks');
+		// viewpoints_plugin_log('Registering Viewpoints ACF Manager hooks');
 
 		// Ensure directories exist - from Viewpoints_Field_Groups
 		$this->ensure_json_directory();
@@ -245,7 +245,7 @@ class Viewpoints_ACF_Manager {
 		// Listen for field group sync completion - from Viewpoints_Field_Groups
 		add_action('acf/include_fields', array($this, 'on_fields_sync'));
 
-		viewpoints_plugin_log('Viewpoints ACF Manager hooks registered');
+		// viewpoints_plugin_log('Viewpoints ACF Manager hooks registered');
 	}
 
 	/**
@@ -257,7 +257,7 @@ class Viewpoints_ACF_Manager {
 	 * @return string Modified path.
 	 */
 	public function acf_json_save_point($path) {
-		viewpoints_plugin_log('Viewpoints ACF Manager: Setting save point to ' . $this->json_dir);
+		// viewpoints_plugin_log('Viewpoints ACF Manager: Setting save point to ' . $this->json_dir);
 		return $this->json_dir;
 	}
 
@@ -272,7 +272,7 @@ class Viewpoints_ACF_Manager {
 	public function acf_json_load_point($paths) {
 		// Add our path to the existing load paths
 		$paths[] = $this->json_dir;
-		viewpoints_plugin_log('Viewpoints ACF Manager: Adding load point ' . $this->json_dir);
+		// viewpoints_plugin_log('Viewpoints ACF Manager: Adding load point ' . $this->json_dir);
 		return $paths;
 	}
 
@@ -297,15 +297,15 @@ class Viewpoints_ACF_Manager {
 	 * @return bool Whether the directory exists or was created successfully
 	 */
 	public function ensure_json_directory() {
-		viewpoints_plugin_log('Checking ACF JSON directory: ' . $this->json_dir);
+		// viewpoints_plugin_log('Checking ACF JSON directory: ' . $this->json_dir);
 
 		if (!file_exists($this->json_dir)) {
-			viewpoints_plugin_log('Creating ACF JSON directory at: ' . $this->json_dir);
+			// viewpoints_plugin_log('Creating ACF JSON directory at: ' . $this->json_dir);
 
 			$created = wp_mkdir_p($this->json_dir);
 
 			if (!$created) {
-				viewpoints_plugin_log('Failed to create ACF JSON directory', 'error');
+				// viewpoints_plugin_log('Failed to create ACF JSON directory', 'error');
 				return false;
 			}
 
@@ -313,7 +313,7 @@ class Viewpoints_ACF_Manager {
 			$index_file = $this->json_dir . 'index.php';
 			if (!file_exists($index_file)) {
 				file_put_contents($index_file, '<?php // Silence is golden');
-				viewpoints_plugin_log('Created index.php protection file in ACF JSON directory');
+				// viewpoints_plugin_log('Created index.php protection file in ACF JSON directory');
 			}
 
 			// Add .htaccess for additional security
@@ -330,14 +330,14 @@ class Viewpoints_ACF_Manager {
 				$htaccess_content .= "    </IfModule>\n";
 				$htaccess_content .= "</Files>";
 				file_put_contents($htaccess_file, $htaccess_content);
-				viewpoints_plugin_log('Created .htaccess protection file in ACF JSON directory');
+				// viewpoints_plugin_log('Created .htaccess protection file in ACF JSON directory');
 			}
 
-			viewpoints_plugin_log('ACF JSON directory created successfully');
+			// viewpoints_plugin_log('ACF JSON directory created successfully');
 			return true;
 		}
 
-		viewpoints_plugin_log('ACF JSON directory already exists');
+		// viewpoints_plugin_log('ACF JSON directory already exists');
 		return true;
 	}
 
@@ -871,11 +871,11 @@ class Viewpoints_ACF_Manager {
 			
 			// If we have multiple field groups with the same key, clean them up
 			if (count($viewpoint_groups) > 1) {
-				viewpoints_plugin_log('Viewpoints ACF Manager: Found ' . count($viewpoint_groups) . ' duplicate field groups, cleaning up');
+				// viewpoints_plugin_log('Viewpoints ACF Manager: Found ' . count($viewpoint_groups) . ' duplicate field groups, cleaning up');
 				
 				// Keep the first one, delete the rest
 				for ($i = 1; $i < count($viewpoint_groups); $i++) {
-					viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate field group ID: ' . $viewpoint_groups[$i]['ID']);
+					// viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate field group ID: ' . $viewpoint_groups[$i]['ID']);
 					acf_delete_field_group($viewpoint_groups[$i]['ID']);
 				}
 			}
@@ -894,7 +894,7 @@ class Viewpoints_ACF_Manager {
 			
 			// If we have multiple post types with the same key, clean them up
 			if (count($viewpoint_post_types) > 1) {
-				viewpoints_plugin_log('Viewpoints ACF Manager: Found ' . count($viewpoint_post_types) . ' duplicate post types, cleaning up');
+				// viewpoints_plugin_log('Viewpoints ACF Manager: Found ' . count($viewpoint_post_types) . ' duplicate post types, cleaning up');
 				
 				// Keep the first one, delete the rest
 				for ($i = 1; $i < count($viewpoint_post_types); $i++) {
@@ -906,7 +906,7 @@ class Viewpoints_ACF_Manager {
 					}
 					
 					if ($post_type_id) {
-						viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate post type ID: ' . $post_type_id);
+						// viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate post type ID: ' . $post_type_id);
 						if (function_exists('acf_delete_post_type')) {
 							acf_delete_post_type($post_type_id);
 						}

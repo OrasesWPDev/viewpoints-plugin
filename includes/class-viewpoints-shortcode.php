@@ -31,7 +31,7 @@ class Viewpoints_Shortcode {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		viewpoints_plugin_log('Initializing Viewpoints_Shortcode class');
+		// viewpoints_plugin_log('Initializing Viewpoints_Shortcode class');
 	}
 
 	/**
@@ -40,7 +40,7 @@ class Viewpoints_Shortcode {
 	 * @since    1.0.0
 	 */
 	public function register() {
-		viewpoints_plugin_log('Registering viewpoints shortcode');
+		// viewpoints_plugin_log('Registering viewpoints shortcode');
 		add_shortcode($this->shortcode_tag, array($this, 'shortcode_callback'));
 
 		// Register breadcrumbs shortcode
@@ -59,7 +59,7 @@ class Viewpoints_Shortcode {
 	 * @return   string              Shortcode output.
 	 */
 	public function shortcode_callback($atts, $content = null) {
-		viewpoints_plugin_log('Shortcode callback triggered with attributes: ' . print_r($atts, true));
+		// viewpoints_plugin_log('Shortcode callback triggered with attributes: ' . print_r($atts, true));
 
 		// Track that shortcode is being used
 		$this->shortcode_used = true;
@@ -170,7 +170,7 @@ class Viewpoints_Shortcode {
 		$viewpoints_archive_url = home_url('/viewpoints/');
 		
 		// Log the URL for debugging
-		viewpoints_plugin_log('Breadcrumbs shortcode: Using viewpoints URL: ' . $viewpoints_archive_url);
+		// viewpoints_plugin_log('Breadcrumbs shortcode: Using viewpoints URL: ' . $viewpoints_archive_url);
 
 		// Start breadcrumbs container
 		echo '<div class="vp-breadcrumbs">';
@@ -205,7 +205,7 @@ class Viewpoints_Shortcode {
 	public function detect_shortcode_usage() {
 		global $post;
 		if (is_singular() && is_a($post, 'WP_Post') && has_shortcode($post->post_content, $this->shortcode_tag)) {
-			viewpoints_plugin_log('Shortcode detected in post content');
+			// viewpoints_plugin_log('Shortcode detected in post content');
 			$this->shortcode_used = true;
 		}
 	}

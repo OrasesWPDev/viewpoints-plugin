@@ -54,9 +54,9 @@ class Viewpoints_Plugin {
      * @return Viewpoints_Plugin - Main instance.
      */
     public static function get_instance() {
-        viewpoints_plugin_log('Getting plugin instance');
+        // viewpoints_plugin_log('Getting plugin instance');
         if ( is_null( self::$instance ) ) {
-            viewpoints_plugin_log('Creating new plugin instance');
+            // viewpoints_plugin_log('Creating new plugin instance');
             self::$instance = new self();
         }
         return self::$instance;
@@ -68,7 +68,7 @@ class Viewpoints_Plugin {
      * @since 1.0.0
      */
     public function __clone() {
-        viewpoints_plugin_log('Clone attempt detected', 'warning');
+        // viewpoints_plugin_log('Clone attempt detected', 'warning');
         _doing_it_wrong( __FUNCTION__, 'Cloning is forbidden.', '1.0.0' );
     }
 
@@ -78,7 +78,7 @@ class Viewpoints_Plugin {
      * @since 1.0.0
      */
     public function __wakeup() {
-        viewpoints_plugin_log('Unserialize attempt detected', 'warning');
+        // viewpoints_plugin_log('Unserialize attempt detected', 'warning');
         _doing_it_wrong( __FUNCTION__, 'Unserializing instances of this class is forbidden.', '1.0.0' );
     }
 
@@ -88,11 +88,11 @@ class Viewpoints_Plugin {
      * @since    1.0.0
      */
     private function __construct() {
-        viewpoints_plugin_log('Plugin constructor started');
+        // viewpoints_plugin_log('Plugin constructor started');
         $this->setup_dependencies();
         $this->define_admin_hooks();
         $this->define_public_hooks();
-        viewpoints_plugin_log('Plugin constructor completed');
+        // viewpoints_plugin_log('Plugin constructor completed');
     }
 
     /**
@@ -102,18 +102,18 @@ class Viewpoints_Plugin {
      * @access   private
      */
 	private function setup_dependencies() {
-		viewpoints_plugin_log('Setting up dependencies');
+		// viewpoints_plugin_log('Setting up dependencies');
 
 		// Initialize components
 		$this->post_type = new Viewpoints_Post_Type();
-		viewpoints_plugin_log('Post Type component initialized');
+		// viewpoints_plugin_log('Post Type component initialized');
 
 		// Use the ACF Manager instead of Field Groups
 		$this->field_groups = Viewpoints_ACF_Manager::get_instance();
-		viewpoints_plugin_log('ACF Manager component initialized');
+		// viewpoints_plugin_log('ACF Manager component initialized');
 
 		$this->shortcode = new Viewpoints_Shortcode();
-		viewpoints_plugin_log('Shortcode component initialized');
+		// viewpoints_plugin_log('Shortcode component initialized');
 	}
 
     /**
@@ -124,7 +124,7 @@ class Viewpoints_Plugin {
      * @access   private
      */
     private function define_admin_hooks() {
-        viewpoints_plugin_log('Defining admin hooks');
+        // viewpoints_plugin_log('Defining admin hooks');
 
         // Admin hooks
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
@@ -139,7 +139,7 @@ class Viewpoints_Plugin {
      * @access   private
      */
     private function define_public_hooks() {
-        viewpoints_plugin_log('Defining public hooks');
+        // viewpoints_plugin_log('Defining public hooks');
 
         // Public hooks
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_public_styles' ) );
@@ -152,19 +152,19 @@ class Viewpoints_Plugin {
 	 * @since    1.0.0
 	 */
 	public function run() {
-		viewpoints_plugin_log('Plugin initialization started');
+		// viewpoints_plugin_log('Plugin initialization started');
 
 		// Initialize various components
-		viewpoints_plugin_log('Registering post type');
+		// viewpoints_plugin_log('Registering post type');
 		$this->post_type->register();
 
-		viewpoints_plugin_log('Registering field groups');
+		// viewpoints_plugin_log('Registering field groups');
 		$this->field_groups->register();
 
-		viewpoints_plugin_log('Registering shortcode');
+		// viewpoints_plugin_log('Registering shortcode');
 		$this->shortcode->register();
 
-		viewpoints_plugin_log('Plugin initialization completed');
+		// viewpoints_plugin_log('Plugin initialization completed');
 	}
 
     /**
@@ -179,12 +179,12 @@ class Viewpoints_Plugin {
             return;
         }
 
-        viewpoints_plugin_log('Enqueuing admin styles for screen: ' . $screen->id);
+        // viewpoints_plugin_log('Enqueuing admin styles for screen: ' . $screen->id);
 
         $css_file = VIEWPOINTS_PLUGIN_ASSETS_DIR . 'css/viewpoints-admin.css';
         $version = file_exists($css_file) ? filemtime($css_file) : VIEWPOINTS_PLUGIN_VERSION;
 
-        viewpoints_plugin_log('Admin CSS file version: ' . $version . ' (Path: ' . $css_file . ')');
+        // viewpoints_plugin_log('Admin CSS file version: ' . $version . ' (Path: ' . $css_file . ')');
 
         wp_enqueue_style(
             'viewpoints-admin',
@@ -207,12 +207,12 @@ class Viewpoints_Plugin {
             return;
         }
 
-        viewpoints_plugin_log('Enqueuing admin scripts for screen: ' . $screen->id);
+        // viewpoints_plugin_log('Enqueuing admin scripts for screen: ' . $screen->id);
 
         $js_file = VIEWPOINTS_PLUGIN_ASSETS_DIR . 'js/viewpoints-admin.js';
         $version = file_exists($js_file) ? filemtime($js_file) : VIEWPOINTS_PLUGIN_VERSION;
 
-        viewpoints_plugin_log('Admin JS file version: ' . $version . ' (Path: ' . $js_file . ')');
+        // viewpoints_plugin_log('Admin JS file version: ' . $version . ' (Path: ' . $js_file . ')');
 
         wp_enqueue_script(
             'viewpoints-admin',
@@ -231,12 +231,12 @@ class Viewpoints_Plugin {
     public function enqueue_public_styles() {
         // Only enqueue on single viewpoint or when shortcode is used
         if ( is_singular( 'viewpoints' ) || $this->shortcode->is_shortcode_used() ) {
-            viewpoints_plugin_log('Enqueuing public styles for viewpoint content');
+            // viewpoints_plugin_log('Enqueuing public styles for viewpoint content');
 
             $css_file = VIEWPOINTS_PLUGIN_ASSETS_DIR . 'css/viewpoints-public.css';
             $version = file_exists($css_file) ? filemtime($css_file) : VIEWPOINTS_PLUGIN_VERSION;
 
-            viewpoints_plugin_log('Public CSS file version: ' . $version . ' (Path: ' . $css_file . ')');
+            // viewpoints_plugin_log('Public CSS file version: ' . $version . ' (Path: ' . $css_file . ')');
 
             wp_enqueue_style(
                 'viewpoints-public',
@@ -256,12 +256,12 @@ class Viewpoints_Plugin {
     public function enqueue_public_scripts() {
         // Only enqueue on single viewpoint or when shortcode is used
         if ( is_singular( 'viewpoints' ) || $this->shortcode->is_shortcode_used() ) {
-            viewpoints_plugin_log('Enqueuing public scripts for viewpoint content');
+            // viewpoints_plugin_log('Enqueuing public scripts for viewpoint content');
 
             $js_file = VIEWPOINTS_PLUGIN_ASSETS_DIR . 'js/viewpoints-public.js';
             $version = file_exists($js_file) ? filemtime($js_file) : VIEWPOINTS_PLUGIN_VERSION;
 
-            viewpoints_plugin_log('Public JS file version: ' . $version . ' (Path: ' . $js_file . ')');
+            // viewpoints_plugin_log('Public JS file version: ' . $version . ' (Path: ' . $js_file . ')');
 
             wp_enqueue_script(
                 'viewpoints-public',

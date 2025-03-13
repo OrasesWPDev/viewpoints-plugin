@@ -17,7 +17,7 @@ class Viewpoints_Deactivator {
      * @since    1.0.0
      */
     public static function deactivate() {
-        viewpoints_plugin_log('Plugin deactivation started');
+        // viewpoints_plugin_log('Plugin deactivation started');
 
         // Clean up any temporary files or caches
         self::cleanup_temporary_files();
@@ -25,7 +25,7 @@ class Viewpoints_Deactivator {
         // Flush rewrite rules to remove custom post type routes
         self::flush_rewrite_rules();
 
-        viewpoints_plugin_log('Plugin deactivation completed');
+        // viewpoints_plugin_log('Plugin deactivation completed');
     }
 
     /**
@@ -35,37 +35,37 @@ class Viewpoints_Deactivator {
      * @access   private
      */
     private static function cleanup_temporary_files() {
-        viewpoints_plugin_log('Cleaning up temporary files and caches');
+        // viewpoints_plugin_log('Cleaning up temporary files and caches');
 
         // Clean cache directory but preserve the directory itself
         $cache_dir = VIEWPOINTS_PLUGIN_DIR . 'cache';
         if (file_exists($cache_dir) && is_dir($cache_dir)) {
-            viewpoints_plugin_log('Processing cache directory: ' . $cache_dir);
+            // viewpoints_plugin_log('Processing cache directory: ' . $cache_dir);
 
             $files = glob($cache_dir . '/*');
             if (is_array($files)) {
                 foreach ($files as $file) {
                     // Skip .htaccess and index files
                     if (basename($file) === '.htaccess' || basename($file) === 'index.php') {
-                        viewpoints_plugin_log('Skipping protection file: ' . basename($file));
+                        // viewpoints_plugin_log('Skipping protection file: ' . basename($file));
                         continue;
                     }
 
                     if (is_file($file)) {
-                        viewpoints_plugin_log('Removing cache file: ' . basename($file));
+                        // viewpoints_plugin_log('Removing cache file: ' . basename($file));
                         @unlink($file);
                     }
                 }
             }
 
-            viewpoints_plugin_log('Cache directory cleaned');
+            // viewpoints_plugin_log('Cache directory cleaned');
         } else {
-            viewpoints_plugin_log('Cache directory not found: ' . $cache_dir);
+            // viewpoints_plugin_log('Cache directory not found: ' . $cache_dir);
         }
 
         // Optionally: Remove any transients
         $transient_prefix = 'viewpoints_';
-        viewpoints_plugin_log('Cleaning up transients with prefix: ' . $transient_prefix);
+        // viewpoints_plugin_log('Cleaning up transients with prefix: ' . $transient_prefix);
 
         global $wpdb;
         $transient_keys = $wpdb->get_col(
@@ -78,7 +78,7 @@ class Viewpoints_Deactivator {
         );
 
         if (!empty($transient_keys)) {
-            viewpoints_plugin_log('Found ' . count($transient_keys) . ' transients to clean up');
+            // viewpoints_plugin_log('Found ' . count($transient_keys) . ' transients to clean up');
 
             foreach ($transient_keys as $key) {
                 if (strpos($key, '_transient_timeout_') !== false) {
@@ -86,11 +86,11 @@ class Viewpoints_Deactivator {
                 }
 
                 $transient_name = str_replace('_transient_', '', $key);
-                viewpoints_plugin_log('Deleting transient: ' . $transient_name);
+                // viewpoints_plugin_log('Deleting transient: ' . $transient_name);
                 delete_transient($transient_name);
             }
         } else {
-            viewpoints_plugin_log('No transients found with the plugin prefix');
+            // viewpoints_plugin_log('No transients found with the plugin prefix');
         }
     }
 
@@ -101,7 +101,7 @@ class Viewpoints_Deactivator {
      * @access   private
      */
     private static function flush_rewrite_rules() {
-        viewpoints_plugin_log('Flushing rewrite rules');
+        // viewpoints_plugin_log('Flushing rewrite rules');
         flush_rewrite_rules();
     }
 }

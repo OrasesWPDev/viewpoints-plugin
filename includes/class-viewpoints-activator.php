@@ -35,7 +35,7 @@ class Viewpoints_Activator {
      * @since    1.0.0
      */
     public static function activate() {
-        viewpoints_plugin_log('Plugin activation started');
+        // viewpoints_plugin_log('Plugin activation started');
 
         // Create necessary directories
         self::create_directories();
@@ -46,7 +46,7 @@ class Viewpoints_Activator {
         // Register initial settings
         self::register_settings();
 
-        viewpoints_plugin_log('Plugin activation completed');
+        // viewpoints_plugin_log('Plugin activation completed');
     }
 
     /**
@@ -56,18 +56,18 @@ class Viewpoints_Activator {
      * @access   private
      */
     private static function create_directories() {
-        viewpoints_plugin_log('Creating plugin directories');
+        // viewpoints_plugin_log('Creating plugin directories');
 
         // Create logs directory if it doesn't exist
         $logs_dir = VIEWPOINTS_PLUGIN_DIR . 'logs';
         if (!file_exists($logs_dir)) {
-            viewpoints_plugin_log('Creating logs directory at: ' . $logs_dir);
+            // viewpoints_plugin_log('Creating logs directory at: ' . $logs_dir);
             wp_mkdir_p($logs_dir);
 
             // Create .htaccess to protect logs directory
             $htaccess_file = $logs_dir . '/.htaccess';
             if (!file_exists($htaccess_file)) {
-                viewpoints_plugin_log('Creating .htaccess protection for logs directory');
+                // viewpoints_plugin_log('Creating .htaccess protection for logs directory');
                 $htaccess_content = "# Deny direct access to files\n";
                 $htaccess_content .= "<FilesMatch \"\\.log$\">\n";
                 $htaccess_content .= "  Order Allow,Deny\n";
@@ -80,13 +80,13 @@ class Viewpoints_Activator {
         // Create cache directory if it doesn't exist
         $cache_dir = VIEWPOINTS_PLUGIN_DIR . 'cache';
         if (!file_exists($cache_dir)) {
-            viewpoints_plugin_log('Creating cache directory at: ' . $cache_dir);
+            // viewpoints_plugin_log('Creating cache directory at: ' . $cache_dir);
             wp_mkdir_p($cache_dir);
 
             // Create .htaccess to protect cache directory
             $htaccess_file = $cache_dir . '/.htaccess';
             if (!file_exists($htaccess_file)) {
-                viewpoints_plugin_log('Creating .htaccess protection for cache directory');
+                // viewpoints_plugin_log('Creating .htaccess protection for cache directory');
                 $htaccess_content = "# Deny direct access\n";
                 $htaccess_content .= "Order Allow,Deny\n";
                 $htaccess_content .= "Deny from all\n";
@@ -106,20 +106,20 @@ class Viewpoints_Activator {
         $stored_version = get_option(self::$version_option_name, '0.0.0');
         $current_version = VIEWPOINTS_PLUGIN_VERSION;
 
-        viewpoints_plugin_log('Version check - Stored version: ' . $stored_version . ', Current version: ' . $current_version);
+        // viewpoints_plugin_log('Version check - Stored version: ' . $stored_version . ', Current version: ' . $current_version);
 
         // If the versions are different, we need to handle an update
         if (version_compare($stored_version, $current_version, '!=')) {
-            viewpoints_plugin_log('Version change detected, cleaning up old plugin data');
+            // viewpoints_plugin_log('Version change detected, cleaning up old plugin data');
 
             // Clean up old plugin settings but preserve content
             self::cleanup_old_data($stored_version, $current_version);
 
             // Update stored version
             update_option(self::$version_option_name, $current_version);
-            viewpoints_plugin_log('Updated stored plugin version to: ' . $current_version);
+            // viewpoints_plugin_log('Updated stored plugin version to: ' . $current_version);
         } else {
-            viewpoints_plugin_log('No version change detected');
+            // viewpoints_plugin_log('No version change detected');
         }
     }
 
@@ -134,7 +134,7 @@ class Viewpoints_Activator {
      * @param    string    $new_version    The new plugin version.
      */
     private static function cleanup_old_data($old_version, $new_version) {
-        viewpoints_plugin_log('Cleaning up old plugin data from v' . $old_version . ' during upgrade to v' . $new_version);
+        // viewpoints_plugin_log('Cleaning up old plugin data from v' . $old_version . ' during upgrade to v' . $new_version);
 
         // Reset any plugin settings/options to defaults
         // but DO NOT delete actual content (posts)
@@ -143,14 +143,14 @@ class Viewpoints_Activator {
         $settings = get_option(self::$settings_option_name, array());
 
         // Log what settings are being reset
-        viewpoints_plugin_log('Current plugin settings before reset: ' . print_r($settings, true));
+        // viewpoints_plugin_log('Current plugin settings before reset: ' . print_r($settings, true));
 
         // Reset to defaults while preserving any custom settings
         $default_settings = self::get_default_settings();
         $updated_settings = array_merge($default_settings, $settings);
 
         update_option(self::$settings_option_name, $updated_settings);
-        viewpoints_plugin_log('Plugin settings updated to defaults');
+        // viewpoints_plugin_log('Plugin settings updated to defaults');
 
         // Additional version-specific upgrades could be added here
         // using version_compare() to target specific upgrades
@@ -158,7 +158,7 @@ class Viewpoints_Activator {
         // Example of version-specific upgrade tasks:
         if (version_compare($old_version, '1.1.0', '<') && version_compare($new_version, '1.1.0', '>=')) {
             // Perform upgrade tasks specific to version 1.1.0
-            viewpoints_plugin_log('Running 1.1.0-specific upgrades');
+            // viewpoints_plugin_log('Running 1.1.0-specific upgrades');
         }
     }
 
@@ -169,18 +169,18 @@ class Viewpoints_Activator {
      * @access   private
      */
     private static function register_settings() {
-        viewpoints_plugin_log('Registering initial plugin settings');
+        // viewpoints_plugin_log('Registering initial plugin settings');
 
         // Get existing settings or create new ones if they don't exist
         $existing_settings = get_option(self::$settings_option_name, array());
 
         // If settings don't exist, initialize with defaults
         if (empty($existing_settings)) {
-            viewpoints_plugin_log('No existing settings found, creating defaults');
+            // viewpoints_plugin_log('No existing settings found, creating defaults');
             $default_settings = self::get_default_settings();
             update_option(self::$settings_option_name, $default_settings);
         } else {
-            viewpoints_plugin_log('Existing settings found: ' . print_r($existing_settings, true));
+            // viewpoints_plugin_log('Existing settings found: ' . print_r($existing_settings, true));
         }
     }
 
@@ -192,7 +192,7 @@ class Viewpoints_Activator {
      * @return   array    The default plugin settings.
      */
     private static function get_default_settings() {
-        viewpoints_plugin_log('Getting default plugin settings');
+        // viewpoints_plugin_log('Getting default plugin settings');
 
         // Define minimal default settings
         return array(

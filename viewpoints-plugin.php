@@ -124,7 +124,7 @@ function viewpoints_plugin_activate() {
     flush_rewrite_rules();
 
     // Log activation
-    viewpoints_plugin_log('Plugin activated');
+    // viewpoints_plugin_log('Plugin activated');
 }
 
 /**
@@ -136,7 +136,7 @@ function viewpoints_plugin_deactivate() {
     flush_rewrite_rules();
 
     // Log deactivation
-    viewpoints_plugin_log('Plugin deactivated');
+    // viewpoints_plugin_log('Plugin deactivated');
 }
 
 // Check dependencies before initializing the plugin

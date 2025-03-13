@@ -33,7 +33,7 @@ class Viewpoints_Post_Type {
      * @since    1.0.0
      */
     public function __construct() {
-        viewpoints_plugin_log('Initializing Viewpoints_Post_Type class');
+        // viewpoints_plugin_log('Initializing Viewpoints_Post_Type class');
         $this->json_dir = VIEWPOINTS_PLUGIN_DIR . 'acf-json/';
     }
 
@@ -43,7 +43,7 @@ class Viewpoints_Post_Type {
      * @since    1.0.0
      */
     public function register() {
-        viewpoints_plugin_log('Registering Viewpoints post type hooks');
+        // viewpoints_plugin_log('Registering Viewpoints post type hooks');
 
         // Add ACF JSON loading point
         add_filter('acf/settings/load_json', array($this, 'add_acf_json_load_point'));
@@ -70,7 +70,7 @@ class Viewpoints_Post_Type {
      * @since    1.0.0
      */
     public function register_post_type() {
-        viewpoints_plugin_log('Registering viewpoints post type');
+        // viewpoints_plugin_log('Registering viewpoints post type');
 
         // Get settings from JSON or fallback
         $settings = $this->get_post_type_settings();
@@ -80,9 +80,9 @@ class Viewpoints_Post_Type {
 
         // Check for errors
         if (is_wp_error($result)) {
-            viewpoints_plugin_log('Error registering post type: ' . $result->get_error_message(), 'error');
+            // viewpoints_plugin_log('Error registering post type: ' . $result->get_error_message(), 'error');
         } else {
-            viewpoints_plugin_log('Post type registered successfully');
+            // viewpoints_plugin_log('Post type registered successfully');
         }
     }
 
@@ -104,13 +104,13 @@ class Viewpoints_Post_Type {
 
             // Validate JSON data
             if (json_last_error() === JSON_ERROR_NONE && is_array($settings)) {
-                viewpoints_plugin_log('Successfully loaded post type settings from JSON');
+                // viewpoints_plugin_log('Successfully loaded post type settings from JSON');
                 return $settings;
             }
 
-            viewpoints_plugin_log('Invalid JSON in post type file: ' . json_last_error_msg(), 'error');
+            // viewpoints_plugin_log('Invalid JSON in post type file: ' . json_last_error_msg(), 'error');
         } else {
-            viewpoints_plugin_log('Post type JSON file not found: ' . $json_file, 'warning');
+            // viewpoints_plugin_log('Post type JSON file not found: ' . $json_file, 'warning');
         }
 
         // Fallback settings
@@ -139,7 +139,7 @@ class Viewpoints_Post_Type {
      * @return   array              Modified paths including our plugin's directory.
      */
     public function add_acf_json_load_point($paths) {
-        viewpoints_plugin_log('Adding ACF JSON load point: ' . $this->json_dir);
+        // viewpoints_plugin_log('Adding ACF JSON load point: ' . $this->json_dir);
         $paths[] = $this->json_dir;
         return $paths;
     }
@@ -152,12 +152,12 @@ class Viewpoints_Post_Type {
      */
     public function ensure_json_directory() {
         if (!file_exists($this->json_dir)) {
-            viewpoints_plugin_log('Creating ACF JSON directory at: ' . $this->json_dir);
+            // viewpoints_plugin_log('Creating ACF JSON directory at: ' . $this->json_dir);
 
             $created = wp_mkdir_p($this->json_dir);
 
             if (!$created) {
-                viewpoints_plugin_log('Failed to create ACF JSON directory', 'error');
+                // viewpoints_plugin_log('Failed to create ACF JSON directory', 'error');
                 return false;
             }
 
@@ -165,7 +165,7 @@ class Viewpoints_Post_Type {
             $index_file = $this->json_dir . 'index.php';
             if (!file_exists($index_file)) {
                 file_put_contents($index_file, '<?php // Silence is golden');
-                viewpoints_plugin_log('Created index.php protection file in ACF JSON directory');
+                // viewpoints_plugin_log('Created index.php protection file in ACF JSON directory');
             }
 
             return true;
@@ -184,9 +184,9 @@ class Viewpoints_Post_Type {
         $exists = post_type_exists($this->post_type);
 
         if (!$exists) {
-            viewpoints_plugin_log('Viewpoints post type does not exist yet - waiting for sync', 'warning');
+            // viewpoints_plugin_log('Viewpoints post type does not exist yet - waiting for sync', 'warning');
         } else {
-            viewpoints_plugin_log('Viewpoints post type exists and is registered');
+            // viewpoints_plugin_log('Viewpoints post type exists and is registered');
         }
 
         return $exists;
@@ -202,13 +202,13 @@ class Viewpoints_Post_Type {
     public function viewpoint_template($template) {
         // Only modify for single viewpoint
         if (is_singular($this->post_type)) {
-            viewpoints_plugin_log('Loading single viewpoint template');
+            // viewpoints_plugin_log('Loading single viewpoint template');
 
             // Check for theme template first
             $theme_template = locate_template(array('single-' . $this->post_type . '.php'));
 
             if ($theme_template) {
-                viewpoints_plugin_log('Using theme template: ' . $theme_template);
+                // viewpoints_plugin_log('Using theme template: ' . $theme_template);
                 return $theme_template;
             }
 
@@ -216,7 +216,7 @@ class Viewpoints_Post_Type {
             $plugin_template = VIEWPOINTS_PLUGIN_TEMPLATES_DIR . 'single-viewpoint.php';
 
             if (file_exists($plugin_template)) {
-                viewpoints_plugin_log('Using plugin template: ' . $plugin_template);
+                // viewpoints_plugin_log('Using plugin template: ' . $plugin_template);
                 return $plugin_template;
             }
         }
