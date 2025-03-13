@@ -236,7 +236,7 @@ class Viewpoints_ACF_Manager {
 	/**
 	 * Initialize ACF sync during acf/init hook.
 	 * This is the main entry point for synchronization.
-	 * Improved implementation to prevent duplicate field groups.
+	 * Improved implementation to prevent duplicate field groups and post types.
 	 *
 	 * @since 1.0.0
 	 */
@@ -269,6 +269,31 @@ class Viewpoints_ACF_Manager {
 				for ($i = 1; $i < count($viewpoint_groups); $i++) {
 					viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate field group ID: ' . $viewpoint_groups[$i]['ID']);
 					acf_delete_field_group($viewpoint_groups[$i]['ID']);
+				}
+			}
+		}
+		
+		// Check for existing post types with our key pattern to avoid duplicates
+		if (function_exists('acf_get_post_types')) {
+			$post_types = acf_get_post_types();
+			$viewpoint_post_types = [];
+			
+			foreach ($post_types as $post_type) {
+				if (isset($post_type['key']) && $post_type['key'] === $this->post_type_key) {
+					$viewpoint_post_types[] = $post_type;
+				}
+			}
+			
+			// If we have multiple post types with the same key, clean them up
+			if (count($viewpoint_post_types) > 1) {
+				viewpoints_plugin_log('Viewpoints ACF Manager: Found ' . count($viewpoint_post_types) . ' duplicate post types, cleaning up');
+				
+				// Keep the first one, delete the rest
+				for ($i = 1; $i < count($viewpoint_post_types); $i++) {
+					viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate post type ID: ' . $viewpoint_post_types[$i]['ID']);
+					if (function_exists('acf_delete_post_type')) {
+						acf_delete_post_type($viewpoint_post_types[$i]['ID']);
+					}
 				}
 			}
 		}
@@ -652,7 +677,7 @@ class Viewpoints_ACF_Manager {
 
 	/**
 	 * Handle the synchronization action.
-	 * Improved implementation to prevent duplicate field groups.
+	 * Improved implementation to prevent duplicate field groups and post types.
 	 *
 	 * @since 1.0.0
 	 * @param bool $skip_security_check Whether to skip security checks (for internal calls)
@@ -697,6 +722,31 @@ class Viewpoints_ACF_Manager {
 				for ($i = 1; $i < count($viewpoint_groups); $i++) {
 					viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate field group ID: ' . $viewpoint_groups[$i]['ID']);
 					acf_delete_field_group($viewpoint_groups[$i]['ID']);
+				}
+			}
+		}
+		
+		// Check for existing post types with our key pattern to avoid duplicates
+		if (function_exists('acf_get_post_types')) {
+			$post_types = acf_get_post_types();
+			$viewpoint_post_types = [];
+			
+			foreach ($post_types as $post_type) {
+				if (isset($post_type['key']) && $post_type['key'] === $this->post_type_key) {
+					$viewpoint_post_types[] = $post_type;
+				}
+			}
+			
+			// If we have multiple post types with the same key, clean them up
+			if (count($viewpoint_post_types) > 1) {
+				viewpoints_plugin_log('Viewpoints ACF Manager: Found ' . count($viewpoint_post_types) . ' duplicate post types, cleaning up');
+				
+				// Keep the first one, delete the rest
+				for ($i = 1; $i < count($viewpoint_post_types); $i++) {
+					viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate post type ID: ' . $viewpoint_post_types[$i]['ID']);
+					if (function_exists('acf_delete_post_type')) {
+						acf_delete_post_type($viewpoint_post_types[$i]['ID']);
+					}
 				}
 			}
 		}
