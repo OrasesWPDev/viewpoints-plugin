@@ -88,6 +88,37 @@ class Viewpoints_ACF_Manager {
 		}
 		return self::$instance;
 	}
+	
+	/**
+	 * Delayed sync method to ensure ACF is fully loaded.
+	 * 
+	 * @since 1.0.0
+	 */
+	public function delayed_sync() {
+		viewpoints_plugin_log('Viewpoints ACF Manager: Running delayed sync');
+		
+		if (!function_exists('acf_get_field_group')) {
+			viewpoints_plugin_log('Viewpoints ACF Manager: ACF still not available, sync aborted');
+			return;
+		}
+		
+		// Clean up duplicates and import field groups/post types
+		$this->cleanup_duplicates();
+		$this->import_post_types();
+		$this->import_field_groups();
+	}
+	
+	/**
+	 * Clean up duplicate field groups and post types.
+	 * 
+	 * @since 1.0.0
+	 */
+	private function cleanup_duplicates() {
+		viewpoints_plugin_log('Viewpoints ACF Manager: Cleaning up duplicates');
+		
+		// Clean up duplicates
+		$this->cleanup_duplicates();
+	}
 
 	/**
 	 * Initialize the class and set its properties.
@@ -245,8 +276,15 @@ class Viewpoints_ACF_Manager {
 		viewpoints_plugin_log('Viewpoints ACF Manager: Field group filename looking for: ' . $this->field_group_filename);
 
 		// Check if we're in the admin and have ACF functions
-		if (!is_admin() || !function_exists('acf_get_field_group')) {
-			viewpoints_plugin_log('Viewpoints ACF Manager: Skipping sync - not in admin or ACF functions not available');
+		if (!is_admin()) {
+			viewpoints_plugin_log('Viewpoints ACF Manager: Skipping sync - not in admin');
+			return;
+		}
+		
+		// Wait for ACF to be fully loaded
+		if (!function_exists('acf_get_field_group')) {
+			viewpoints_plugin_log('Viewpoints ACF Manager: ACF functions not available yet, will try again later');
+			add_action('admin_init', array($this, 'delayed_sync'), 20);
 			return;
 		}
 		
@@ -562,6 +600,12 @@ class Viewpoints_ACF_Manager {
 		viewpoints_plugin_log('Viewpoints ACF Manager: Importing field group: ' . $field_group['key']);
 		viewpoints_plugin_log('Viewpoints ACF Manager: Field group has ' . count($field_group['fields']) . ' fields');
 
+		// Make sure ACF is fully loaded before proceeding
+		if (!function_exists('acf_get_field_group') || !function_exists('acf_update_field_group')) {
+			viewpoints_plugin_log('Viewpoints ACF Manager: ACF functions not available, skipping field group import');
+			return;
+		}
+
 		// Check if this field group already exists
 		$existing = acf_get_field_group($field_group['key']);
 		viewpoints_plugin_log('Viewpoints ACF Manager: Existing field group check: ' . ($existing ? 'EXISTS' : 'DOES NOT EXIST'));
@@ -570,6 +614,13 @@ class Viewpoints_ACF_Manager {
 			if (!$existing) {
 				// If it doesn't exist, create it
 				viewpoints_plugin_log('Viewpoints ACF Manager: Creating new field group');
+				
+				// Make sure we're not trying to set an ID that doesn't exist
+				if (isset($field_group['ID'])) {
+					unset($field_group['ID']);
+				}
+				
+				// Import the field group
 				acf_import_field_group($field_group);
 				viewpoints_plugin_log('Viewpoints ACF Manager: Successfully created field group: ' . $field_group['title']);
 			} else if ($force_import) {
