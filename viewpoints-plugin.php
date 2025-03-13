@@ -38,6 +38,10 @@ define('VIEWPOINTS_PLUGIN_DEBUG', defined('WP_DEBUG') && WP_DEBUG);
  * @param string $level Log level.
  */
 function viewpoints_plugin_log($message, $level = 'debug') {
+    // Logging is disabled to prevent storage issues
+    return;
+    
+    /*
     // Define log constants if not already defined
     if (!defined('VIEWPOINTS_PLUGIN_DEBUG') || !VIEWPOINTS_PLUGIN_DEBUG) {
         return;
@@ -62,6 +66,7 @@ function viewpoints_plugin_log($message, $level = 'debug') {
 
     // Append to log file
     error_log($message . PHP_EOL, 3, $log_file);
+    */
 }
 
 /**
@@ -158,7 +163,8 @@ function viewpoints_plugin_init() {
 	// Initialize the Help documentation
 	Viewpoints_Help::get_instance();
 
-	// Add debug code to check ACF integration
+	// Comment out debug code to check ACF integration
+	/*
 	add_action('admin_init', function() {
 		viewpoints_plugin_log('ACF Debug: Check if ACF integration is running');
 		// Check if the ACF Manager class instance exists
@@ -204,5 +210,6 @@ function viewpoints_plugin_init() {
 			viewpoints_plugin_log('ACF Debug: Viewpoints_ACF_Manager class does not exist');
 		}
 	});
+	*/
 }
 add_action('plugins_loaded', 'viewpoints_plugin_init');
