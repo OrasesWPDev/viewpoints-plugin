@@ -1,6 +1,6 @@
 <?php
 /**
- * Template for displaying single viewpoint posts
+ * Template for displaying single viewpoints posts
  *
  * @package Viewpoints_Plugin
  * @version 1.0.0
