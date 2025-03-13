@@ -46,8 +46,7 @@
   "menu_icon": "dashicons-format-quote",
   "supports": [
     "title",
-    "thumbnail",
-    "page-attributes"
+    "thumbnail"
   ],
   "taxonomies": [
     "category",
