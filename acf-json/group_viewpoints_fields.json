@@ -8,7 +8,7 @@
       "name": "viewpoint_excerpt",
       "aria-label": "",
       "type": "wysiwyg",
-      "instructions": "This will be used as the excerpt in listings and search results",
+      "instructions": "used for archive listings - Use P (<P>) with block quote html",
       "required": 0,
       "conditional_logic": 0,
       "wrapper": {
