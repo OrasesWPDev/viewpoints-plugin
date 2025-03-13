@@ -255,6 +255,12 @@ class Viewpoints_ACF_Manager {
 
 		// Import field groups
 		$this->import_field_groups();
+		
+		// Force sync on plugin activation or update
+		if (isset($_GET['activated']) || isset($_GET['updated']) || isset($_GET['activated-multisite'])) {
+			viewpoints_plugin_log('Viewpoints ACF Manager: Plugin activation or update detected, forcing sync');
+			$this->handle_sync_action(true);
+		}
 	}
 
 	/**
@@ -465,8 +471,8 @@ class Viewpoints_ACF_Manager {
 		viewpoints_plugin_log('Viewpoints ACF Manager: Field group key from JSON: ' . $field_group['key']);
 		viewpoints_plugin_log('Viewpoints ACF Manager: Field group title from JSON: ' . $field_group['title']);
 
-		// Import the field group
-		$this->import_single_field_group($field_group);
+		// Force the field group to be imported regardless of whether it exists
+		$this->import_single_field_group($field_group, true);
 	}
 
 	/**
@@ -475,8 +481,9 @@ class Viewpoints_ACF_Manager {
 	 *
 	 * @since 1.0.0
 	 * @param array $field_group Field group definition
+	 * @param bool $force_import Whether to force import even if the field group exists
 	 */
-	private function import_single_field_group($field_group) {
+	private function import_single_field_group($field_group, $force_import = false) {
 		viewpoints_plugin_log('Viewpoints ACF Manager: Importing field group: ' . $field_group['key']);
 		viewpoints_plugin_log('Viewpoints ACF Manager: Field group has ' . count($field_group['fields']) . ' fields');
 
@@ -484,8 +491,14 @@ class Viewpoints_ACF_Manager {
 		$existing = acf_get_field_group($field_group['key']);
 		viewpoints_plugin_log('Viewpoints ACF Manager: Existing field group check: ' . ($existing ? 'EXISTS' : 'DOES NOT EXIST'));
 
-		if (!$existing) {
+		if (!$existing || $force_import) {
 			try {
+				// If it exists and we're forcing import, remove it first to avoid conflicts
+				if ($existing && $force_import) {
+					viewpoints_plugin_log('Viewpoints ACF Manager: Force importing field group, removing existing one first');
+					acf_delete_field_group($existing['ID']);
+				}
+				
 				// Import the field group
 				viewpoints_plugin_log('Viewpoints ACF Manager: Attempting to import field group via acf_import_field_group()');
 				acf_import_field_group($field_group);
@@ -615,23 +628,28 @@ class Viewpoints_ACF_Manager {
 	 * Identical to the original implementation in Viewpoints_ACF.
 	 *
 	 * @since 1.0.0
+	 * @param bool $skip_security_check Whether to skip security checks (for internal calls)
 	 */
-	public function handle_sync_action() {
+	public function handle_sync_action($skip_security_check = false) {
 		viewpoints_plugin_log('Viewpoints ACF Manager: Handling sync action');
 
-		// Security check
-		if (!current_user_can('manage_options')) {
-			viewpoints_plugin_log('Viewpoints ACF Manager: Security check failed - insufficient permissions');
-			wp_die(__('You do not have sufficient permissions to access this page.', 'viewpoints-plugin'));
-		}
+		// Security check - skip if called internally
+		if (!$skip_security_check) {
+			if (!current_user_can('manage_options')) {
+				viewpoints_plugin_log('Viewpoints ACF Manager: Security check failed - insufficient permissions');
+				wp_die(__('You do not have sufficient permissions to access this page.', 'viewpoints-plugin'));
+			}
 
-		// Verify nonce for security
-		if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'viewpoints_sync_acf')) {
-			viewpoints_plugin_log('Viewpoints ACF Manager: Security check failed - invalid nonce');
-			wp_die(__('Security check failed.', 'viewpoints-plugin'));
+			// Verify nonce for security
+			if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'viewpoints_sync_acf')) {
+				viewpoints_plugin_log('Viewpoints ACF Manager: Security check failed - invalid nonce');
+				wp_die(__('Security check failed.', 'viewpoints-plugin'));
+			}
+			
+			viewpoints_plugin_log('Viewpoints ACF Manager: Security checks passed, proceeding with sync');
+		} else {
+			viewpoints_plugin_log('Viewpoints ACF Manager: Security checks skipped (internal call), proceeding with sync');
 		}
-
-		viewpoints_plugin_log('Viewpoints ACF Manager: Security checks passed, proceeding with sync');
 
 		// Import post types
 		$this->import_post_types();
@@ -639,15 +657,19 @@ class Viewpoints_ACF_Manager {
 		// Import field groups
 		$this->import_field_groups();
 
-		viewpoints_plugin_log('Viewpoints ACF Manager: Sync completed, redirecting');
+		viewpoints_plugin_log('Viewpoints ACF Manager: Sync completed');
 
-		// Redirect to the main ACF field groups list
-		wp_redirect(add_query_arg(array(
-			'post_type' => 'acf-field-group',
-			'sync' => 'complete',
-			'count' => 1
-		), admin_url('edit.php')));
-		exit;
+		// Only redirect if this is a manual sync action
+		if (!$skip_security_check) {
+			viewpoints_plugin_log('Viewpoints ACF Manager: Redirecting after manual sync');
+			// Redirect to the main ACF field groups list
+			wp_redirect(add_query_arg(array(
+				'post_type' => 'acf-field-group',
+				'sync' => 'complete',
+				'count' => 1
+			), admin_url('edit.php')));
+			exit;
+		}
 	}
 
 	/**
