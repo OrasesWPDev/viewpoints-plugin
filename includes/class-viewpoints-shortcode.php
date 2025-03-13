@@ -66,90 +66,86 @@ class Viewpoints_Shortcode {
 
 		// Parse attributes
 		$atts = shortcode_atts(array(
-			'count' => 5,                 // Number of viewpoints to display
+			'count' => -1,                // Number of viewpoints to display (-1 for all)
 			'orderby' => 'date',          // Order by parameter
 			'order' => 'DESC',            // Order direction
-			'category' => '',             // Category slug
+			'category' => '',             // Category slug or ID
+			'tag' => '',                  // Tag slug or ID
+			'include' => '',              // Include specific viewpoints by ID
+			'exclude' => '',              // Exclude specific viewpoints by ID
+			'offset' => 0,                // Offset for query
+			'columns' => 3,               // Number of columns (1, 2, 3, or 4)
+			'class' => '',                // Additional CSS class
+			'paged' => true,              // Whether to enable pagination
 		), $atts, $this->shortcode_tag);
 
-		// Validate and sanitize attributes
-		$count = absint($atts['count']);
-		$orderby = in_array($atts['orderby'], array('date', 'title', 'modified', 'menu_order')) ? $atts['orderby'] : 'date';
-		$order = in_array(strtoupper($atts['order']), array('ASC', 'DESC')) ? strtoupper($atts['order']) : 'DESC';
-
+		// Validate columns (must be 1, 2, 3, or 4)
+		$columns = intval($atts['columns']);
+		if ($columns < 1 || $columns > 4) {
+			$columns = 3; // Default to 3 columns if invalid
+		}
+		
+		// Get current page for pagination
+		$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+		
 		// Set up query arguments
 		$args = array(
 			'post_type' => 'viewpoints',
-			'posts_per_page' => $count,
-			'orderby' => $orderby,
-			'order' => $order,
+			'posts_per_page' => $atts['count'],
+			'orderby' => $atts['orderby'],
+			'order' => $atts['order'],
 			'post_status' => 'publish',
 		);
-
-		// Add category if specified
-		if (!empty($atts['category'])) {
-			$args['tax_query'] = array(
-				array(
-					'taxonomy' => 'category',
-					'field' => 'slug',
-					'terms' => explode(',', $atts['category']),
-				),
-			);
+		
+		// Add pagination if enabled
+		if ($atts['paged']) {
+			$args['paged'] = $paged;
 		}
 
-		viewpoints_plugin_log('Query arguments: ' . print_r($args, true));
+		// Add category parameter if set
+		if (!empty($atts['category'])) {
+			if (is_numeric($atts['category'])) {
+				$args['cat'] = $atts['category'];
+			} else {
+				$args['category_name'] = $atts['category'];
+			}
+		}
 
-		// Get viewpoints
-		$viewpoints_query = new WP_Query($args);
+		// Add tag parameter if set
+		if (!empty($atts['tag'])) {
+			if (is_numeric($atts['tag'])) {
+				$args['tag_id'] = $atts['tag'];
+			} else {
+				$args['tag'] = $atts['tag'];
+			}
+		}
+
+		// Add include parameter if set
+		if (!empty($atts['include'])) {
+			$args['post__in'] = explode(',', $atts['include']);
+		}
+
+		// Add exclude parameter if set
+		if (!empty($atts['exclude'])) {
+			$args['post__not_in'] = explode(',', $atts['exclude']);
+		}
+
+		// Add offset parameter if set
+		if (!empty($atts['offset'])) {
+			$args['offset'] = $atts['offset'];
+		}
+
+		// Run the query
+		$query = new WP_Query($args);
 
 		// Start output buffering
 		ob_start();
 
-		// Check if we have viewpoints
-		if ($viewpoints_query->have_posts()) {
-			echo '<div class="viewp-container">';
-			while ($viewpoints_query->have_posts()) {
-				$viewpoints_query->the_post();
+		// Include the template file
+		include(VIEWPOINTS_PLUGIN_TEMPLATES_DIR . 'viewpoints-grid.php');
 
-				// Get featured image URL
-				$featured_image = '';
-				if (has_post_thumbnail()) {
-					$featured_image = get_the_post_thumbnail_url(get_the_ID(), 'medium');
-				}
-
-				echo '<div class="viewp-item">';
-
-				// Display featured image if available
-				if ($featured_image) {
-					echo '<div class="viewp-thumbnail">';
-					echo '<img src="' . esc_url($featured_image) . '" alt="' . esc_attr(get_the_title()) . '" />';
-					echo '</div>';
-				}
-
-				// Display title
-				echo '<h2 class="viewp-title">';
-				echo '<a href="' . esc_url(get_permalink()) . '">' . esc_html(get_the_title()) . '</a>';
-				echo '</h2>';
-
-				// Display content
-				echo '<div class="viewp-content">';
-				the_content();
-				echo '</div>';
-
-				echo '</div>'; // End .viewp-item
-			}
-			echo '</div>'; // End .viewp-container
-
-			// Restore original post data
-			wp_reset_postdata();
-		} else {
-			echo '<p class="viewp-no-results">No viewpoints found.</p>';
-		}
-
-		$output = ob_get_clean();
-		viewpoints_plugin_log('Shortcode output generated');
-
-		return $output;
+		// Return the buffered output
+		return ob_get_clean();
 	}
 
 	/**
