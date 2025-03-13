@@ -359,7 +359,7 @@ class Viewpoints_Help {
 
                 <p><?php esc_html_e('Display specific viewpoints by ID:', 'viewpoints-plugin'); ?></p>
                 <div class="vp-shortcode-example">
-                    [viewpoints include="42,51,90" orderby="post__in"]
+                    [viewpoints include="42,51,90"]
                 </div>
             </div>
 
