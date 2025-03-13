@@ -194,6 +194,13 @@
     line-height: 1.6;
 }
 
+/* Remove left border for blockquotes in grid view */
+.vp-grid-excerpt blockquote {
+    border-left: none;
+    padding-left: 0;
+    background-color: transparent;
+}
+
 .vp-content-body blockquote p:last-child {
     margin-bottom: 0;
 }
@@ -324,11 +331,11 @@
 }
 
 .vp-columns-3 .vp-grid-item {
-    width: 33.333%;
+    width: 50%; /* Changed to 50% to always show 2 columns */
 }
 
 .vp-columns-4 .vp-grid-item {
-    width: 25%;
+    width: 50%; /* Changed to 50% to always show 2 columns */
 }
 
 .vp-grid-item-link {
@@ -461,8 +468,9 @@
 
 @media (max-width: 768px) {
     .vp-columns-3 .vp-grid-item,
-    .vp-columns-4 .vp-grid-item {
-        width: 50%;
+    .vp-columns-4 .vp-grid-item,
+    .vp-columns-2 .vp-grid-item {
+        width: 100%; /* On smaller screens, stack to single column */
     }
 }
 

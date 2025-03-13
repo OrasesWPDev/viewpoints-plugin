@@ -82,8 +82,11 @@ class Viewpoints_Shortcode {
 		// Validate columns (must be 1, 2, 3, or 4)
 		$columns = intval($atts['columns']);
 		if ($columns < 1 || $columns > 4) {
-			$columns = 3; // Default to 3 columns if invalid
+			$columns = 2; // Default to 2 columns if invalid
 		}
+		
+		// Force 2 columns for better layout
+		$columns = 2;
 		
 		// Get current page for pagination
 		$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
