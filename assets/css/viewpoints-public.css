@@ -192,6 +192,8 @@
     font-style: italic;
     font-size: 1.1em;
     line-height: 1.6;
+    width: 100%; /* Make blockquote full content width */
+    box-sizing: border-box;
 }
 
 /* Remove left border for blockquotes in grid view */
@@ -203,6 +205,27 @@
 
 .vp-content-body blockquote p:last-child {
     margin-bottom: 0;
+}
+
+/* Testimonial blockquote styling */
+.vp-content-body .testimonial-name blockquote {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.vp-content-body .testimonial-name blockquote h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: var(--vp-primary-color);
+}
+
+.vp-content-body .testimonial-name blockquote .role-testimonial {
+    margin-top: 0;
+    font-style: italic;
+    color: #666;
 }
 
 .vp-content-body blockquote cite,
