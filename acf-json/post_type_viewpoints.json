@@ -1,66 +1,4 @@
 {
-  "key": "viewpoints",
-  "title": "Viewpoints",
-  "post_type": "viewpoints",
-  "description": "Used to enter and / or edit Viewpoints",
-  "active": true,
-  "rewrite": {
-    "slug": "viewpoints",
-    "with_front": false,
-    "feeds": false,
-    "pages": true
-  },
-  "labels": {
-    "name": "Viewpoints",
-    "singular_name": "Viewpoints",
-    "menu_name": "Viewpoints",
-    "all_items": "All Viewpoints",
-    "edit_item": "Edit Viewpoints",
-    "view_item": "View Viewpoints",
-    "view_items": "View Viewpoints",
-    "add_new_item": "Add New Viewpoints",
-    "add_new": "Add New Viewpoints",
-    "new_item": "New Viewpoints",
-    "parent_item_colon": "Parent Viewpoints:",
-    "search_items": "Search Viewpoints",
-    "not_found": "No viewpoints found",
-    "not_found_in_trash": "No viewpoints found in Trash",
-    "archives": "Viewpoints Archives",
-    "attributes": "Viewpoints Attributes",
-    "insert_into_item": "Insert into viewpoints",
-    "uploaded_to_this_item": "Uploaded to this viewpoints",
-    "filter_items_list": "Filter viewpoints list",
-    "filter_by_date": "Filter viewpoints by date",
-    "items_list_navigation": "Viewpoints list navigation",
-    "items_list": "Viewpoints list",
-    "item_published": "Viewpoints published.",
-    "item_published_privately": "Viewpoints published privately.",
-    "item_reverted_to_draft": "Viewpoints reverted to draft.",
-    "item_scheduled": "Viewpoints scheduled.",
-    "item_updated": "Viewpoints updated.",
-    "item_link": "Viewpoints Link",
-    "item_link_description": "A link to a viewpoints."
-  },
-  "public": true,
-  "show_in_rest": true,
-  "menu_icon": "dashicons-admin-post",
-  "supports": [
-    "title",
-    "excerpt",
-    "page-attributes",
-    "thumbnail",
-    "custom-fields"
-  ],
-  "taxonomies": [
-    "category",
-    "block_categories",
-    "post_tag"
-  ],
-  "has_archive": true,
-  "delete_with_user": false,
-  "import_source": "viewpoints-plugin",
-  "import_date": "2025-03-12 18:00:00"
-}{
   "key": "post_type_viewpoints",
   "title": "Viewpoints Post Type",
   "post_type": "viewpoints",
@@ -106,7 +44,10 @@
   "capability_type": "post",
   "map_meta_cap": true,
   "register_meta_box_cb": "",
-  "taxonomies": [],
+  "taxonomies": [
+    "category",
+    "post_tag"
+  ],
   "has_archive": true,
   "query_var": true,
   "can_export": true,
