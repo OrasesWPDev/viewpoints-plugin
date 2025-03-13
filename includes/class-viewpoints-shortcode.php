@@ -163,8 +163,14 @@ class Viewpoints_Shortcode {
 		ob_start();
 
 		$home_url = home_url();
-		$viewpoints_archive_url = get_post_type_archive_link('viewpoints');
 		$viewpoints_label = 'Viewpoints';
+		
+		// Since archive is disabled, create a fallback URL for the Viewpoints link
+		// Use the site URL + /viewpoints/ as the fallback
+		$viewpoints_archive_url = home_url('/viewpoints/');
+		
+		// Log the URL for debugging
+		viewpoints_plugin_log('Breadcrumbs shortcode: Using viewpoints URL: ' . $viewpoints_archive_url);
 
 		// Start breadcrumbs container
 		echo '<div class="vp-breadcrumbs">';
