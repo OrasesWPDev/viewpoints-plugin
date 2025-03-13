@@ -145,6 +145,7 @@ require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-plugin.php';
 require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-post-type.php';
 require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-shortcode.php';
 require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-acf-manager.php';
+require_once VIEWPOINTS_PLUGIN_INCLUDES_DIR . 'class-viewpoints-help.php';
 
 // Initialize plugin
 function viewpoints_plugin_init() {
@@ -153,6 +154,9 @@ function viewpoints_plugin_init() {
 
 	// Initialize the ACF integration with consolidated manager
 	Viewpoints_ACF_Manager::get_instance();
+	
+	// Initialize the Help documentation
+	Viewpoints_Help::get_instance();
 
 	// Add debug code to check ACF integration
 	add_action('admin_init', function() {

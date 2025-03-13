@@ -192,10 +192,65 @@
     font-style: italic;
     font-size: 1.1em;
     line-height: 1.6;
+    width: 100%; /* Make blockquote full content width */
+    box-sizing: border-box;
+}
+
+/* Remove left border for blockquotes in grid view */
+.vp-grid-excerpt blockquote {
+    border-left: none;
+    padding-left: 0;
+    background-color: transparent;
 }
 
 .vp-content-body blockquote p:last-child {
     margin-bottom: 0;
+}
+
+/* Testimonial blockquote styling */
+.vp-content-body .testimonial-name blockquote,
+.vp-content-body .row .col-md-12 .clearfix.testimonial-name blockquote {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    box-sizing: border-box;
+}
+
+/* Fix for nested rows and columns in content */
+.vp-content-body .row {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.vp-content-body .col-md-12 {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.vp-content-body .clearfix {
+    width: 100%;
+}
+
+.vp-content-body .testimonial-name blockquote h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #68348d;
+}
+
+.vp-content-body .testimonial-name blockquote .role-testimonial,
+.vp-content-body .testimonial-name blockquote p:not(:first-child) {
+    margin-top: 0;
+    font-style: italic;
+    color: #68348d;
+    font-weight: bold;
+}
+
+.vp-content-body .testimonial-name blockquote p:first-of-type {
+    color: #7c7c7c;
+    font-weight: normal;
 }
 
 .vp-content-body blockquote cite,
@@ -293,7 +348,154 @@
 }
 
 /* ----------------------------------------
-   7. UTILITY CLASSES
+   7. VIEWPOINTS GRID LAYOUT
+   ---------------------------------------- */
+.vp-grid-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.vp-grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.vp-grid-item {
+    padding: 15px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+
+/* Column layouts */
+.vp-columns-1 .vp-grid-item {
+    width: 100%;
+}
+
+.vp-columns-2 .vp-grid-item {
+    width: 50%;
+}
+
+.vp-columns-3 .vp-grid-item {
+    width: 50%; /* Changed to 50% to always show 2 columns */
+}
+
+.vp-columns-4 .vp-grid-item {
+    width: 50%; /* Changed to 50% to always show 2 columns */
+}
+
+.vp-grid-item-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+}
+
+.vp-grid-item-inner {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.vp-grid-item-inner:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.vp-grid-thumbnail {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding-top: 30px; /* Double the padding at the top of the image */
+}
+
+.vp-thumbnail {
+    width: 350px;
+    height: 350px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+}
+
+.vp-grid-content {
+    padding: 20px 10px; /* Reduced horizontal padding to widen content space */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.vp-grid-title {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--vp-primary-color, #002c5c);
+}
+
+.vp-grid-excerpt {
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 350px;
+    margin: 0 auto;
+    font-style: italic; /* Make text italic */
+}
+
+/* Style the first paragraph in blockquote with gray color */
+.vp-grid-excerpt blockquote p:first-child {
+    color: #7c7c7c;
+    font-weight: normal;
+}
+
+/* Style the second paragraph in blockquote with purple color and bold */
+.vp-grid-excerpt blockquote p:last-child {
+    color: #68348d;
+    font-weight: bold;
+}
+
+.vp-grid-excerpt p {
+    margin-top: 0;
+}
+
+.vp-pagination {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.vp-pagination .page-numbers {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 3px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--vp-primary-color, #002c5c);
+}
+
+.vp-pagination .page-numbers.current {
+    background-color: var(--vp-primary-color, #002c5c);
+    color: white;
+    border-color: var(--vp-primary-color, #002c5c);
+}
+
+.vp-pagination .page-numbers:hover:not(.current) {
+    background-color: #f5f5f5;
+}
+
+.vp-no-results {
+    text-align: center;
+    padding: 30px;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+/* ----------------------------------------
+   8. UTILITY CLASSES
    ---------------------------------------- */
 .vp-text-center {
     text-align: center;
@@ -316,8 +518,32 @@
 }
 
 /* ----------------------------------------
-   8. RESPONSIVE STYLES
+   9. RESPONSIVE STYLES
    ---------------------------------------- */
+/* Grid responsive styles */
+@media (max-width: 992px) {
+    .vp-columns-4 .vp-grid-item {
+        width: 33.333%;
+    }
+}
+
+@media (max-width: 768px) {
+    .vp-columns-3 .vp-grid-item,
+    .vp-columns-4 .vp-grid-item,
+    .vp-columns-2 .vp-grid-item {
+        width: 100%; /* On smaller screens, stack to single column */
+    }
+}
+
+@media (max-width: 576px) {
+    .vp-columns-2 .vp-grid-item,
+    .vp-columns-3 .vp-grid-item,
+    .vp-columns-4 .vp-grid-item {
+        width: 100%;
+    }
+}
+
+/* Single viewpoint responsive styles */
 @media screen and (max-width: 991px) {
     .vp-bio-column,
     .vp-featured-image-column {
