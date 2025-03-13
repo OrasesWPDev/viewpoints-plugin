@@ -313,7 +313,7 @@ class Viewpoints_ACF_Manager {
 
 	/**
 	 * Import post type definitions from JSON.
-	 * Identical to the original implementation in Viewpoints_ACF.
+	 * Improved implementation to prevent duplicate post types.
 	 *
 	 * @since 1.0.0
 	 */
@@ -363,11 +363,12 @@ class Viewpoints_ACF_Manager {
 				$existing = acf_get_post_type_post($post_type_key);
 			}
 
-			if (!$existing) {
-				// Set import info
-				$post_type_data['import_source'] = 'viewpoints-plugin';
-				$post_type_data['import_date'] = date('Y-m-d H:i:s');
+			// Set import info
+			$post_type_data['import_source'] = 'viewpoints-plugin';
+			$post_type_data['import_date'] = date('Y-m-d H:i:s');
 
+			if (!$existing) {
+				// If it doesn't exist, create it
 				viewpoints_plugin_log('Viewpoints ACF Manager: Importing post type: ' . $post_type_data['title']);
 
 				// Different versions of ACF might require different approaches
@@ -379,7 +380,22 @@ class Viewpoints_ACF_Manager {
 					$this->register_post_type_fallback($post_type_data);
 				}
 			} else {
-				viewpoints_plugin_log('Viewpoints ACF Manager: Post type already exists: ' . $post_type_key);
+				// If it exists, update it instead of skipping
+				viewpoints_plugin_log('Viewpoints ACF Manager: Post type already exists, updating: ' . $post_type_key);
+				
+				// Preserve the ID and other important properties
+				if (isset($existing['ID'])) {
+					$post_type_data['ID'] = $existing['ID'];
+				}
+				
+				// Update the post type
+				if (function_exists('acf_update_post_type')) {
+					acf_update_post_type($post_type_data);
+					viewpoints_plugin_log('Viewpoints ACF Manager: Successfully updated post type via acf_update_post_type()');
+				} else {
+					// Fallback to native WordPress registration if ACF function not available
+					$this->register_post_type_fallback($post_type_data);
+				}
 			}
 		} catch (Exception $e) {
 			viewpoints_plugin_log('Viewpoints ACF Manager: Error importing post type: ' . $e->getMessage());
