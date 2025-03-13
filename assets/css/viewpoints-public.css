@@ -331,28 +331,6 @@
     width: 25%;
 }
 
-/* Responsive adjustments */
-@media (max-width: 992px) {
-    .vp-columns-4 .vp-grid-item {
-        width: 33.333%;
-    }
-}
-
-@media (max-width: 768px) {
-    .vp-columns-3 .vp-grid-item,
-    .vp-columns-4 .vp-grid-item {
-        width: 50%;
-    }
-}
-
-@media (max-width: 576px) {
-    .vp-columns-2 .vp-grid-item,
-    .vp-columns-3 .vp-grid-item,
-    .vp-columns-4 .vp-grid-item {
-        width: 100%;
-    }
-}
-
 .vp-grid-item-link {
     display: block;
     text-decoration: none;
@@ -449,7 +427,7 @@
 }
 
 /* ----------------------------------------
-   7. UTILITY CLASSES
+   8. UTILITY CLASSES
    ---------------------------------------- */
 .vp-text-center {
     text-align: center;
@@ -472,8 +450,31 @@
 }
 
 /* ----------------------------------------
-   8. RESPONSIVE STYLES
+   9. RESPONSIVE STYLES
    ---------------------------------------- */
+/* Grid responsive styles */
+@media (max-width: 992px) {
+    .vp-columns-4 .vp-grid-item {
+        width: 33.333%;
+    }
+}
+
+@media (max-width: 768px) {
+    .vp-columns-3 .vp-grid-item,
+    .vp-columns-4 .vp-grid-item {
+        width: 50%;
+    }
+}
+
+@media (max-width: 576px) {
+    .vp-columns-2 .vp-grid-item,
+    .vp-columns-3 .vp-grid-item,
+    .vp-columns-4 .vp-grid-item {
+        width: 100%;
+    }
+}
+
+/* Single viewpoint responsive styles */
 @media screen and (max-width: 991px) {
     .vp-bio-column,
     .vp-featured-image-column {
