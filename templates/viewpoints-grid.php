@@ -54,13 +54,22 @@ $container_class .= ' vp-columns-' . $columns;
                             <?php endif; ?>
                             
                             <div class="vp-grid-content">
-                                <h3 class="vp-grid-title"><?php echo esc_html($title); ?></h3>
-                                
-                                <?php if (!empty($excerpt)) : ?>
-                                    <div class="vp-grid-excerpt">
-                                        <?php echo $excerpt; ?>
-                                    </div>
-                                <?php endif; ?>
+                                <div class="vp-grid-excerpt">
+                                    <?php 
+                                    // Get the viewpoint bio instead of using the title
+                                    $bio = '';
+                                    if (function_exists('get_field')) {
+                                        $bio = get_field('viewpoint_bio', $post_id);
+                                        if (empty($bio)) {
+                                            // Fallback to excerpt if bio is empty
+                                            $bio = $excerpt;
+                                        }
+                                    }
+                                    
+                                    // Output the bio content
+                                    echo $bio;
+                                    ?>
+                                </div>
                             </div>
                         </div>
                     </a>
