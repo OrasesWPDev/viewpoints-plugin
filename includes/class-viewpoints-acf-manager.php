@@ -290,9 +290,18 @@ class Viewpoints_ACF_Manager {
 				
 				// Keep the first one, delete the rest
 				for ($i = 1; $i < count($viewpoint_post_types); $i++) {
-					viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate post type ID: ' . $viewpoint_post_types[$i]['ID']);
-					if (function_exists('acf_delete_post_type')) {
-						acf_delete_post_type($viewpoint_post_types[$i]['ID']);
+					$post_type_id = null;
+					if (is_array($viewpoint_post_types[$i]) && isset($viewpoint_post_types[$i]['ID'])) {
+						$post_type_id = $viewpoint_post_types[$i]['ID'];
+					} elseif (is_object($viewpoint_post_types[$i]) && isset($viewpoint_post_types[$i]->ID)) {
+						$post_type_id = $viewpoint_post_types[$i]->ID;
+					}
+					
+					if ($post_type_id) {
+						viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate post type ID: ' . $post_type_id);
+						if (function_exists('acf_delete_post_type')) {
+							acf_delete_post_type($post_type_id);
+						}
 					}
 				}
 			}
@@ -384,8 +393,10 @@ class Viewpoints_ACF_Manager {
 				viewpoints_plugin_log('Viewpoints ACF Manager: Post type already exists, updating: ' . $post_type_key);
 				
 				// Preserve the ID and other important properties
-				if (isset($existing['ID'])) {
+				if (is_array($existing) && isset($existing['ID'])) {
 					$post_type_data['ID'] = $existing['ID'];
+				} elseif (is_object($existing) && isset($existing->ID)) {
+					$post_type_data['ID'] = $existing->ID;
 				}
 				
 				// Update the post type
@@ -759,9 +770,18 @@ class Viewpoints_ACF_Manager {
 				
 				// Keep the first one, delete the rest
 				for ($i = 1; $i < count($viewpoint_post_types); $i++) {
-					viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate post type ID: ' . $viewpoint_post_types[$i]['ID']);
-					if (function_exists('acf_delete_post_type')) {
-						acf_delete_post_type($viewpoint_post_types[$i]['ID']);
+					$post_type_id = null;
+					if (is_array($viewpoint_post_types[$i]) && isset($viewpoint_post_types[$i]['ID'])) {
+						$post_type_id = $viewpoint_post_types[$i]['ID'];
+					} elseif (is_object($viewpoint_post_types[$i]) && isset($viewpoint_post_types[$i]->ID)) {
+						$post_type_id = $viewpoint_post_types[$i]->ID;
+					}
+					
+					if ($post_type_id) {
+						viewpoints_plugin_log('Viewpoints ACF Manager: Deleting duplicate post type ID: ' . $post_type_id);
+						if (function_exists('acf_delete_post_type')) {
+							acf_delete_post_type($post_type_id);
+						}
 					}
 				}
 			}
