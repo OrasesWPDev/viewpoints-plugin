@@ -85,8 +85,7 @@ class Viewpoints_Shortcode {
 			$columns = 2; // Default to 2 columns if invalid
 		}
 		
-		// Force 2 columns for better layout
-		$columns = 2;
+		// Note: Column value is now respected from shortcode parameter
 		
 		// Get current page for pagination
 		$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;

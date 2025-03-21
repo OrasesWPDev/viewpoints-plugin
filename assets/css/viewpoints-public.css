@@ -379,11 +379,11 @@
 }
 
 .vp-columns-3 .vp-grid-item {
-    width: 50%; /* Changed to 50% to always show 2 columns */
+    width: 33.333%; /* Proper width for 3 columns */
 }
 
 .vp-columns-4 .vp-grid-item {
-    width: 50%; /* Changed to 50% to always show 2 columns */
+    width: 25%; /* Proper width for 4 columns */
 }
 
 .vp-grid-item-link {
