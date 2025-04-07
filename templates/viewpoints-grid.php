@@ -81,6 +81,12 @@ $container_class .= ' vp-columns-' . $columns;
 			                        }
 			                        ?>
                                 </div>
+
+                                <!-- Add horizontal rule with a class -->
+                                <hr class="vp-grid-divider">
+
+                                <!-- Add title with a class -->
+                                <h3 class="vp-grid-title"><?php echo esc_html($title); ?></h3>
                             </div>
                         </div>
                     </a>
