@@ -32,15 +32,24 @@ get_header();
                 <div class="row">
                     <!-- Bio Content Column (Left) -->
                     <div class="large-8 medium-8 small-12 col vp-bio-column">
-						<?php if (function_exists('get_field') && $viewpoint_bio = get_field('viewpoint_bio')) : ?>
-                            <div class="vp-bio-content">
-								<?php echo wp_kses_post($viewpoint_bio); ?>
-                            </div>
-						<?php else : ?>
-                            <div class="vp-bio-content">
-								<?php the_excerpt(); ?>
-                            </div>
-						<?php endif; ?>
+                        <div class="vp-bio-content">
+							<?php
+							// Display the full bio content
+							if (function_exists('get_field') && $viewpoint_bio = get_field('viewpoint_bio')) {
+								echo wp_kses_post($viewpoint_bio);
+							}
+
+							// Add line break
+							echo '<hr class="vp-content-divider">';
+
+							// Display the full excerpt content
+							if (function_exists('get_field') && $viewpoint_excerpt = get_field('viewpoint_excerpt')) {
+								echo wp_kses_post($viewpoint_excerpt);
+							} elseif (has_excerpt()) {
+								the_excerpt();
+							}
+							?>
+                        </div>
                     </div>
                     <!-- Featured Image Column (Right) -->
                     <div class="large-4 medium-4 small-12 col vp-featured-image-column">

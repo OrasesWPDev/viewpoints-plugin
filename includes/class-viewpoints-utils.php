@@ -107,34 +107,36 @@ class Viewpoints_Utils {
         return $default;
     }
 
-    /**
-     * Get content excerpt with custom length.
-     *
-     * @since    1.0.0
-     * @param    string    $content     The content to get excerpt from.
-     * @param    int       $length      The length of the excerpt in words.
-     * @param    string    $more        What to append if content is longer than excerpt.
-     * @return   string                 The excerpt.
-     */
-    public static function get_excerpt($content, $length = 55, $more = '&hellip;') {
-        viewpoints_plugin_log('Generating excerpt with length: ' . $length);
+	/**
+	 * Get content excerpt with custom length.
+	 *
+	 * @since    1.0.0
+	 * @param    string    $content     The content to get excerpt from.
+	 * @param    int       $length      The length of the excerpt in characters (default: 120).
+	 * @param    string    $more        What to append if content is longer than excerpt.
+	 * @param    bool      $with_quotes Whether to add quotes around the excerpt.
+	 * @return   string                 The excerpt.
+	 */
+	public static function get_excerpt($content, $length = 120, $more = '[...]', $with_quotes = true) {
+		viewpoints_plugin_log('Generating excerpt with character length: ' . $length);
 
-        // Strip shortcodes and HTML
-        $excerpt = strip_shortcodes($content);
-        $excerpt = strip_tags($excerpt);
+		// Strip shortcodes and HTML
+		$excerpt = strip_shortcodes($content);
+		$excerpt = strip_tags($excerpt);
 
-        // Trim to desired word count
-        $words = explode(' ', $excerpt, $length + 1);
-        if (count($words) > $length) {
-            array_pop($words);
-            $excerpt = implode(' ', $words) . $more;
-        } else {
-            $excerpt = implode(' ', $words);
-        }
+		// Trim to desired character count (not word count)
+		if (mb_strlen($excerpt) > $length) {
+			$excerpt = mb_substr($excerpt, 0, $length) . $more;
+		}
 
-        viewpoints_plugin_log('Generated excerpt of length: ' . str_word_count($excerpt));
-        return $excerpt;
-    }
+		// Add quotation marks if required
+		if ($with_quotes) {
+			$excerpt = '"' . $excerpt . '"';
+		}
+
+		viewpoints_plugin_log('Generated excerpt with final length: ' . mb_strlen($excerpt));
+		return $excerpt;
+	}
 
     /**
      * Sanitize and validate viewpoint data.

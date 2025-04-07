@@ -90,8 +90,8 @@
    4. BIO SECTION WITH FEATURED IMAGE
    ---------------------------------------- */
 .vp-bio-section {
-    margin-bottom: var(--vp-spacing-large);
-    padding: var(--vp-spacing-medium) 0;
+    margin-bottom: 0px;
+    padding: 0px;
     margin-top: 60px !important; /* Increased top margin with !important */
 }
 
@@ -104,7 +104,13 @@
 }
 
 .vp-bio-content p {
-    margin-bottom: 1em;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    line-height: 1.8rem;
+    font-weight: 400;
+    text-align: left;
+    font-style: italic;
+    color: #007d89;
 }
 
 .vp-featured-image-column {
@@ -205,6 +211,7 @@
 
 .vp-content-body blockquote p:last-child {
     margin-bottom: 0;
+    color: #f98e2b;
 }
 
 /* Testimonial blockquote styling */
@@ -413,7 +420,7 @@
     position: relative;
     overflow: hidden;
     text-align: center;
-    padding-top: 30px; /* Double the padding at the top of the image */
+    padding-top: 0px;
 }
 
 .vp-thumbnail {
@@ -429,6 +436,7 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    background-color: #20cbd4;
 }
 
 .vp-grid-title {
@@ -448,13 +456,13 @@
 
 /* Style the first paragraph in blockquote with gray color */
 .vp-grid-excerpt blockquote p:first-child {
-    color: #7c7c7c;
+    color: #fff;
     font-weight: normal;
 }
 
 /* Style the second paragraph in blockquote with purple color and bold */
 .vp-grid-excerpt blockquote p:last-child {
-    color: #68348d;
+    color: #fff;
     font-weight: bold;
 }
 

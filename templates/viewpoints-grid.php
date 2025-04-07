@@ -52,23 +52,34 @@ $container_class .= ' vp-columns-' . $columns;
                                     ?>
                                 </div>
                             <?php endif; ?>
-                            
+
                             <div class="vp-grid-content">
                                 <div class="vp-grid-excerpt">
-                                    <?php 
-                                    // Get the viewpoint excerpt instead of bio
-                                    $excerpt_content = '';
-                                    if (function_exists('get_field')) {
-                                        $excerpt_content = get_field('viewpoint_excerpt', $post_id);
-                                        if (empty($excerpt_content)) {
-                                            // Fallback to regular excerpt if viewpoint_excerpt is empty
-                                            $excerpt_content = $excerpt;
-                                        }
-                                    }
-                                    
-                                    // Output the excerpt content
-                                    echo $excerpt_content;
-                                    ?>
+			                        <?php
+			                        // Get the viewpoint bio field
+			                        $bio_content = '';
+			                        if (function_exists('get_field')) {
+				                        $bio_content = get_field('viewpoint_bio', $post_id);
+				                        if (empty($bio_content)) {
+					                        // Fallback to excerpt if bio is empty
+					                        $bio_content = function_exists('get_field') ? get_field('viewpoint_excerpt', $post_id) : '';
+					                        if (empty($bio_content)) {
+						                        $bio_content = $excerpt;
+					                        }
+				                        }
+
+				                        // Format the bio content using our updated utility method
+				                        if (!empty($bio_content)) {
+					                        $formatted_content = Viewpoints_Utils::get_excerpt($bio_content, 120, '[...]', true);
+					                        echo $formatted_content;
+				                        } else {
+					                        echo '""'; // Empty quotes if no content available
+				                        }
+			                        } else {
+				                        // ACF not available, just use basic excerpt
+				                        echo '"' . get_the_excerpt() . '"';
+			                        }
+			                        ?>
                                 </div>
                             </div>
                         </div>
