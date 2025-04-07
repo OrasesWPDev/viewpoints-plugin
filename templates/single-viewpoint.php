@@ -17,11 +17,11 @@ get_header();
         <!-- Header Block (full width) -->
         <div class="vp-section-wrapper vp-viewpoint-header">
 			<?php echo do_shortcode('[block id="single-viewpoint-header"]'); ?>
-			<?php if (!strpos(ob_get_contents(), 'vp-breadcrumbs')) : ?>
-                <div class="container">
-					<?php echo do_shortcode('[viewpoint_breadcrumbs]'); ?>
-                </div>
-			<?php endif; ?>
+<!--			--><?php //if (!strpos(ob_get_contents(), 'vp-breadcrumbs')) : ?>
+<!--                <div class="container">-->
+<!--					--><?php //echo do_shortcode('[viewpoint_breadcrumbs]'); ?>
+<!--                </div>-->
+<!--			--><?php //endif; ?>
         </div>
 
         <!-- Start the Loop -->
